@@ -2,7 +2,5 @@
 
 return array(
     'allow_not_routed_url' => false,
-
-    'default_route' => 'home',
     'default_url' => '/',
 );
