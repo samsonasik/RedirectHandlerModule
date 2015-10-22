@@ -68,11 +68,11 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch2 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
         $routeMatch2->getMatchedRouteName()->willReturn('bar');
 
-        return [
-            [null],
-            [$routeMatch1],
-            [$routeMatch2],
-        ];
+        return array(
+            array(null),
+            array($routeMatch1),
+            array($routeMatch2),
+        );
     }
 
     /**
