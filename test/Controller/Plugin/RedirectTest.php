@@ -45,7 +45,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $url = '/foo';
 
         $this->serviceLocator->get('config')
-                             ->willReturn(['allow_not_routed_url' => true]);
+                             ->willReturn(array('allow_not_routed_url' => true));
 
         $mvcEvent = $this->prophesize('Zend\Mvc\MvcEvent');
         $response = $this->prophesize('Zend\Http\PhpEnvironment\Response');
