@@ -35,7 +35,7 @@ Installation
 
  - Require via composer
 ```bash
-$ composer require samsonasik/redirect-handler-module
+$ composer require samsonasik/redirect-handler-module:dev-master
 ```
 
  - Copy Config
