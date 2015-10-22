@@ -37,11 +37,9 @@ class ModuleTest extends PHPUnit_Framework_TestCase
         $this->module = new Module();
     }
 
-    /**
-     * @covers RedirectHandlerModule\Module::getConfig()
-     */
     public function testGetConfig()
     {
-        $this->assertTrue(is_array($this->module->getConfig()));
+        $config = include __DIR__ . '/../config/module.config.php';
+        $this->assertSame($config, $this->module->getConfig());
     }
 }
