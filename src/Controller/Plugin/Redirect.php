@@ -36,7 +36,7 @@ class Redirect extends BaseRedirect
 
         $config = $serviceLocator->get('config');
         $allow_not_routed_url = (isset($config['allow_not_routed_url'])) ? $config['allow_not_routed_url'] : false;
-        $default_url = (isset($config['default_url'])) ? $config['default_url'] : '/';
+        $default_url          = (isset($config['default_url'])) ? $config['default_url'] : '/';
 
         if ($allow_not_routed_url) {
             return parent::toUrl($url);

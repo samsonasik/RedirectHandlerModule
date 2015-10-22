@@ -18,6 +18,7 @@
         "zendframework/zend-mvc": "~2.3"
     },
     "require-dev": {
+        "zendframework/zend-http": "~2.3",
         "phpunit/phpunit": "~4.0|~5.0",
         "satooshi/php-coveralls": "dev-master",
         "phpunit/phpcov": "~2.0"
@@ -25,6 +26,11 @@
     "autoload": {
         "psr-4": {
             "RedirectHandlerModule\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedirectHandlerModuleTest\\": "test/"
         }
     },
     "config": {
