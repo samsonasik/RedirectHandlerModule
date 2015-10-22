@@ -9,6 +9,27 @@ RedirectHandlerModule
 
 *RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2 application. It simply override existing ZF2 redirect plugin, so you can just use it.
 
+For example, you use `redirect()` plugin in your controller:
+
+```php
+$redirect = $this->params()->fromQuery('redirect', '');
+
+return $this->redirect()->toUrl($redirect);
+```
+
+if the passed `$redirect` as url is a valid and registered in the routes, it uses default `redirect()` implementation, otherwise, it will redirect to default `default_url` registerd in `config/redirect-handler-module.local.php`:
+
+For example, you define:
+
+```php
+return array(
+    'allow_not_routed_url' => false,
+    'default_url' => '/',
+);
+```
+
+It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url.
+
 Installation
 ------------
 
