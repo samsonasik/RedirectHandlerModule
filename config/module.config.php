@@ -18,11 +18,9 @@
  */
 
 return array(
-
     'controller_plugins' => array(
         'invokables' => array(
             'redirect' => 'RedirectHandlerModule\Controller\Plugin\Redirect',
         ),
     ),
-
 );
