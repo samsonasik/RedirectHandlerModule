@@ -7,19 +7,18 @@ RedirectHandlerModule
 [![Coverage Status](https://coveralls.io/repos/samsonasik/RedirectHandlerModule/badge.svg?branch=master)](https://coveralls.io/r/samsonasik/RedirectHandlerModule)
 [![Downloads](https://img.shields.io/packagist/dt/samsonasik/redirect-handler-module.svg?style=flat-square)](https://packagist.org/packages/samsonasik/redirect-handler-module)
 
-*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2 application. It simply override existing ZF2 redirect plugin, so you can just use it.
+*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2 application. It simply override existing ZF2 redirect plugin, so we can just use it.
 
-For example, you use `redirect()` plugin in your controller:
+For example, we use `redirect()` plugin in your controller:
 
 ```php
-$redirect = $this->params()->fromQuery('redirect', '');
-
+$redirect = '/foo'; // may be a variable from GET
 return $this->redirect()->toUrl($redirect);
 ```
 
-if the passed `$redirect` as url is a valid and registered in the routes, it uses default `redirect()` implementation, otherwise, it will redirect to default `default_url` registerd in `config/redirect-handler-module.local.php`:
+if the passed `$redirect` as url is a valid and registered in the routes, it uses default `redirect()` implementation, otherwise, it will redirect to default `default_url` registered in `config/redirect-handler-module.local.php`:
 
-For example, you define:
+For example, we define:
 
 ```php
 return array(
@@ -38,9 +37,7 @@ Installation
 $ composer require samsonasik/redirect-handler-module:dev-master
 ```
 
- - Copy Config
-
-Copy `vendor/samsonasik/redirect-handler-module/config/redirect-handler-module.local.php.dist` to `config/autoload/redirect-handler-module.local.php` and modify on your needs.
+ - Copy `vendor/samsonasik/redirect-handler-module/config/redirect-handler-module.local.php.dist` to `config/autoload/redirect-handler-module.local.php` and modify on your needs.
 
  - register to `config/application.config.php`:
 
