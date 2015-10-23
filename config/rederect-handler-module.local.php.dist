@@ -1,6 +1,0 @@
-<?php
-
-return array(
-    'allow_not_routed_url' => false,
-    'default_url' => '/',
-);
