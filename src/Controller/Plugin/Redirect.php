@@ -31,7 +31,8 @@ class Redirect extends BaseRedirect
      */
     public function toUrl($url)
     {
-        $serviceLocator = $this->getController()->getServiceLocator();
+        $controller     = $this->getController();
+        $serviceLocator = $controller->getServiceLocator();
 
         $config = $serviceLocator->get('config');
         $allow_not_routed_url = (isset($config['allow_not_routed_url'])) ? $config['allow_not_routed_url'] : false;
@@ -41,6 +42,26 @@ class Redirect extends BaseRedirect
             return parent::toUrl($url);
         }
 
-        return parent::toUrl($default_url);
+        $request        = $controller->getRequest();
+        $current_url    = $request->getRequestUri();
+        $request->setUri($url);
+
+        $currentRouteMatchName = $this->getEvent()
+                                            ->getRouteMatch()
+                                            ->getMatchedRouteName();
+
+        if ( $routeToBeMatched = $serviceLocator->get('Router')->match($request) ) {
+            $controller = $routeToBeMatched->getParam('controller');
+
+            if ($routeToBeMatched->getMatchedRouteName() != $currentRouteMatchName
+                && $serviceLocator->get('ControllerManager')->has($controller)
+            ) {
+                return parent::toUrl($url);
+            }
+        }
+
+        if ($default_url !== $current_url) {
+            return parent::toUrl($default_url);
+        }
     }
 }
