@@ -66,15 +66,15 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     public function provideMatches()
     {
         $routeMatch1 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $routeMatch1->getParam('controller')->willReturn('not-match')->shouldBeCalled();
-        $routeMatch1->getMatchedRouteName()->willReturn('not-match')->shouldBeCalled();;
+        $routeMatch1->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
+        $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();;
         $routeMatch2 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
         $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
         $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
 
         return array(
             array('isnull', null),
-            array('not-match', $routeMatch1),
+            array('not-bar', $routeMatch1),
             array('bar', $routeMatch2),
         );
     }
