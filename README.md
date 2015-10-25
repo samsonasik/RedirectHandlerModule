@@ -27,7 +27,7 @@ return array(
 );
 ```
 
-It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url.
+It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. Also, it disable to self, so you can't redirect to self.
 
 Installation
 ------------
