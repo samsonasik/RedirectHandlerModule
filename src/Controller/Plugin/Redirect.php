@@ -47,10 +47,10 @@ class Redirect extends BaseRedirect
         $request->setUri($url);
 
         $currentRouteMatchName = $this->getEvent()
-                                            ->getRouteMatch()
-                                            ->getMatchedRouteName();
+                                      ->getRouteMatch()
+                                      ->getMatchedRouteName();
 
-        if ( $routeToBeMatched = $serviceLocator->get('Router')->match($request) ) {
+        if ($routeToBeMatched = $serviceLocator->get('Router')->match($request)) {
             $controller = $routeToBeMatched->getParam('controller');
 
             if ($routeToBeMatched->getMatchedRouteName() != $currentRouteMatchName
