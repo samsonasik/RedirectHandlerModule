@@ -105,7 +105,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                              ->willReturn($router);
 
         if ($status !== 'isnull') {
-            $controllerManager = $this->prophesize(ControllerManager::class);
+            $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
             $this->serviceLocator->get('ControllerManager')
                                  ->willReturn($controllerManager);
 
