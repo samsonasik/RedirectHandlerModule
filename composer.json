@@ -3,7 +3,7 @@
     "type": "library",
     "description": "ZF2 module to for Url Redirect handling",
     "keywords": ["redirect","zf2"],
-    "homepage": "https://github.com/samsonasik/RedirectHanlderModule",
+    "homepage": "https://github.com/samsonasik/RedirectHandlerModule",
     "license": "MIT",
     "authors": [
         {
