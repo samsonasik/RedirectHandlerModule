@@ -1,7 +1,7 @@
 RedirectHandlerModule
 =====================
 
-[![Latest Version](https://img.shields.io/github/release/samsonasik/RedirectHandlerModule.svg?style=flat-square)](https://github.com/samsonasik/RedirectHandlerModule/releases)
+[![PHP version](https://badge.fury.io/ph/samsonasik%2Fredirect-handler-module.svg)](https://badge.fury.io/ph/samsonasik%2Fredirect-handler-module)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://travis-ci.org/samsonasik/RedirectHandlerModule.svg?branch=master)](https://travis-ci.org/samsonasik/RedirectHandlerModule)
 [![Coverage Status](https://coveralls.io/repos/samsonasik/RedirectHandlerModule/badge.svg?branch=master)](https://coveralls.io/r/samsonasik/RedirectHandlerModule)
