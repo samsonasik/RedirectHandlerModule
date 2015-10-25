@@ -23,6 +23,7 @@ use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Mvc\Controller\ControllerManager;
 
 class RedirectTest extends PHPUnit_Framework_TestCase
 {
@@ -65,20 +66,23 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     public function provideMatches()
     {
         $routeMatch1 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
+        $routeMatch1->getParam('controller')->willReturn('not-match')->shouldBeCalled();
+        $routeMatch1->getMatchedRouteName()->willReturn('not-match')->shouldBeCalled();;
         $routeMatch2 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $routeMatch2->getMatchedRouteName()->willReturn('bar');
+        $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
+        $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
 
         return array(
-            array(null),
-            array($routeMatch1),
-            array($routeMatch2),
+            array('isnull', null),
+            array('not-match', $routeMatch1),
+            array('bar', $routeMatch2),
         );
     }
 
     /**
      * @dataProvider provideMatches
      */
-    public function testDisallowNotRoutedUrl($match)
+    public function testDisallowNotRoutedUrl($status, $match)
     {
         $url = '/foo';
 
@@ -99,6 +103,14 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $router->match($request)->willReturn($match);
         $this->serviceLocator->get('Router')
                              ->willReturn($router);
+
+        if ($status !== 'isnull') {
+            $controllerManager = $this->prophesize(ControllerManager::class);
+            $this->serviceLocator->get('ControllerManager')
+                                 ->willReturn($controllerManager);
+
+            $controllerManager->has($status)->willReturn(true);
+        }
 
         $response = $this->prophesize('Zend\Http\PhpEnvironment\Response');
         $mvcEvent->getResponse()->willReturn($response);
