@@ -38,7 +38,7 @@ class Redirect extends BaseRedirect
         $allow_not_routed_url = (isset($config['allow_not_routed_url'])) ? $config['allow_not_routed_url'] : false;
         $default_url          = (isset($config['default_url'])) ? $config['default_url'] : '/';
 
-        if ($allow_not_routed_url) {
+        if (true === $allow_not_routed_url) {
             return parent::toUrl($url);
         }
 
@@ -46,14 +46,16 @@ class Redirect extends BaseRedirect
         $current_url    = $request->getRequestUri();
         $request->setUri($url);
 
-        $currentRouteMatchName = $controller->getEvent()
+        $currentRouteMatchName = $this->getEvent()
                                             ->getRouteMatch()
                                             ->getMatchedRouteName();
 
-        if ($routeToBeMatched = $serviceLocator->get('Router')
-                                               ->match($request)
-        ) {
-            if ($routeToBeMatched->getMatchedRouteName() != $currentRouteMatchName) {
+        if ( $routeToBeMatched = $serviceLocator->get('Router')->match($request) ) {
+            $controller = $routeToBeMatched->getParam('controller');
+
+            if ($routeToBeMatched->getMatchedRouteName() != $currentRouteMatchName
+                && $serviceLocator->get('ControllerManager')->has($controller)
+            ) {
                 return parent::toUrl($url);
             }
         }
