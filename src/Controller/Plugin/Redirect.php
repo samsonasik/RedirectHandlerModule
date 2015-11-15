@@ -19,10 +19,14 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
+use Zend\EventManager\EventManagerAwareTrait;
+use Zend\EventManager\EventManagerAwareInterface;
 use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
 
-class Redirect extends BaseRedirect
+class Redirect extends BaseRedirect implements EventManagerAwareInterface
 {
+    use EventManagerAwareTrait;
+
     /**
      * Redirect with Handling against url
      *
@@ -46,6 +50,11 @@ class Redirect extends BaseRedirect
         $current_url    = $request->getRequestUri();
         $request->setUri($url);
 
+        if ($current_url === $url) {
+            $this->getEventManager()->trigger('redirect-same-url');
+            return;
+        }
+
         $currentRouteMatchName = $this->getEvent()
                                       ->getRouteMatch()
                                       ->getMatchedRouteName();
@@ -53,15 +62,13 @@ class Redirect extends BaseRedirect
         if ($routeToBeMatched = $serviceLocator->get('Router')->match($request)) {
             $controller = $routeToBeMatched->getParam('controller');
 
-            if ($routeToBeMatched->getMatchedRouteName() != $currentRouteMatchName
+            if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
                 && $serviceLocator->get('ControllerManager')->has($controller)
             ) {
                 return parent::toUrl($url);
             }
         }
 
-        if ($default_url !== $current_url) {
-            return parent::toUrl($default_url);
-        }
+        return parent::toUrl($default_url);
     }
 }

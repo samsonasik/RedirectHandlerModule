@@ -21,8 +21,8 @@ namespace RedirectHandlerModuleTest\Controller\Plugin;
 
 use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\ControllerManager;
 
 class RedirectTest extends PHPUnit_Framework_TestCase
@@ -126,7 +126,35 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->toUrl($url);
     }
 
-    public function testDisallowNotRoutedUrlAndUrlSame()
+    public function testDisallowNotRoutedUrlWithSameUrlWithTriggerEvent()
+    {
+        $url = '/bar';
+
+        $this->serviceLocator->get('config')
+                             ->willReturn(array('allow_not_routed_url' => false));
+
+        $request = $this->prophesize('Zend\Http\PhpEnvironment\Request');
+        $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
+        $request->setUri($url)->shouldBeCalled();
+        $this->controller->getRequest()->willReturn($request);
+
+        $this->controller->getServiceLocator()->willReturn($this->serviceLocator);
+        $this->redirect->setController($this->controller->reveal());
+
+        $eventManager = new EventManager();
+        $eventManager->attach('redirect-same-url', function() {
+            echo 'redirect to same url is not allowed.';
+        });
+        $this->redirect->setEventManager($eventManager);
+
+        ob_start();
+        $this->redirect->toUrl($url);
+        $content = ob_get_clean();
+
+        $this->assertEquals('redirect to same url is not allowed.', $content);
+    }
+
+    public function testDisallowNotRoutedUrlAndUrlSameWithDefaultUrl()
     {
         $url = '/bar';
 

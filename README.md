@@ -27,7 +27,22 @@ return array(
 );
 ```
 
-It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. Also, it disable to self, so you can't redirect to self.
+It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. Also, it disable to self, so you can't redirect to self. While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
+
+```php
+class Module
+{
+    public function onBootstrap($e)
+    {
+        $eventManager  = $e->getApplication()->getEventManager();
+        $sharedManager = $eventManager->getSharedManager();
+
+        $sharedManager->attach('RedirectHandlerModule\Controller\Plugin\Redirect', 'redirect-same-url', function() {
+            die('You need to use different URL for Redirect');
+        });
+    }
+}
+```
 
 Installation
 ------------
