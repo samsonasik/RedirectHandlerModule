@@ -14,11 +14,11 @@
         }
     ],
     "require": {
-        "php": "^5.3.23|^7.0",
-        "zendframework/zend-mvc": "~2.3"
+        "php": "^5.4|^7.0",
+        "zendframework/zend-mvc": "~2.4"
     },
     "require-dev": {
-        "zendframework/zend-http": "~2.3",
+        "zendframework/zend-http": "~2.4",
         "phpunit/phpunit": "~4.0|~5.0",
         "satooshi/php-coveralls": "dev-master",
         "phpunit/phpcov": "~2.0"
