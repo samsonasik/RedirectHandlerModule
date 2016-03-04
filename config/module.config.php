@@ -19,8 +19,8 @@
 
 return array(
     'controller_plugins' => array(
-        'invokables' => array(
-            'redirect' => 'RedirectHandlerModule\Controller\Plugin\Redirect',
+        'factories' => array(
+            'redirect' => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
         ),
     ),
 );
