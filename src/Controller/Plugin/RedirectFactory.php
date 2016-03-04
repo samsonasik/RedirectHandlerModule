@@ -28,6 +28,9 @@ class RedirectFactory
         $services = $manager->getServiceLocator();
         $config   = $services->get('config');
 
-        return new Redirect($config['redirect_handler_module']);
+        return new Redirect(
+            $config['redirect_handler_module'],
+            $manager // in purpose!
+        );
     }
 }
