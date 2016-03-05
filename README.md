@@ -51,7 +51,7 @@ Installation
 
  - Require via composer
 ```bash
-$ composer require samsonasik/redirect-handler-module:0.*
+$ composer require samsonasik/redirect-handler-module:1.*
 ```
 
  - Copy `vendor/samsonasik/redirect-handler-module/config/redirect-handler-module.local.php.dist` to `config/autoload/redirect-handler-module.local.php` and modify on your needs.
