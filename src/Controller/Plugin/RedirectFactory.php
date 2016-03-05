@@ -26,6 +26,7 @@ class RedirectFactory
     public function __invoke(PluginManager $manager)
     {
         $services = $manager->getServiceLocator();
+        $controllerManager = $services->get('ControllerManager');
         $config   = $services->get('config');
 
         if (! isset($config['redirect_handler_module'])) {
@@ -37,7 +38,7 @@ class RedirectFactory
 
         return new Redirect(
             $config['redirect_handler_module'],
-            $manager // I KNOW, on PURPOSE!
+            $controllerManager // I KNOW, on PURPOSE!
         );
     }
 }
