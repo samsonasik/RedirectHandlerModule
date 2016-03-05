@@ -65,6 +65,8 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             return parent::toUrl($url);
         }
 
+        $controller = $this->getController();
+
         $request     = $controller->getRequest();
         $current_url = $request->getRequestUri();
         $request->setUri($url);
