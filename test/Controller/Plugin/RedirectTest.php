@@ -38,7 +38,15 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->serviceLocator = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
         $this->controller     = $this->prophesize('Zend\Mvc\Controller\AbstractActionController');
 
-        $this->redirect = new Redirect();
+        $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
+
+        $this->redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ],
+            $controllerManager->reveal()
+        );
     }
 
     public function testAllowNotRoutedUrl()
