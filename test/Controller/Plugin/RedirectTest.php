@@ -30,17 +30,14 @@ use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteInterface;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class RedirectTest extends PHPUnit_Framework_TestCase
 {
-    private $serviceLocator;
     private $controllerManager;
     private $controller;
 
     protected function setUp()
     {
-        $this->serviceLocator    = $this->prophesize(ServiceLocatorInterface::class);
         $this->controller        = $this->prophesize(AbstractActionController::class);
         $this->controllerManager = $this->prophesize(ControllerManager::class);
     }
@@ -186,8 +183,6 @@ class RedirectTest extends PHPUnit_Framework_TestCase
 
         $router = $this->prophesize(RouteInterface::class);
         $router->match($request)->willReturn(null);
-        $this->serviceLocator->get('Router')
-                             ->willReturn($router);
 
         $response = $this->prophesize(Response::class);
         $mvcEvent->getResponse()->willReturn($response);
