@@ -28,9 +28,16 @@ class RedirectFactory
         $services = $manager->getServiceLocator();
         $config   = $services->get('config');
 
+        if (! isset($config['redirect_handler_module'])) {
+            $config['redirect_handler_module'] = [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ];
+        }
+
         return new Redirect(
             $config['redirect_handler_module'],
-            $manager
+            $manager // I KNOW, on PURPOSE!
         );
     }
 }
