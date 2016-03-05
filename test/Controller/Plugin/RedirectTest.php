@@ -22,7 +22,6 @@ namespace RedirectHandlerModuleTest\Controller\Plugin;
 use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
 use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\Controller\ControllerManager;
 
 class RedirectTest extends PHPUnit_Framework_TestCase

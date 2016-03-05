@@ -19,8 +19,8 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
 
