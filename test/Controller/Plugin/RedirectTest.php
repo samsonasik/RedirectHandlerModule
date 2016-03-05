@@ -27,168 +27,19 @@ use Zend\Mvc\Controller\ControllerManager;
 
 class RedirectTest extends PHPUnit_Framework_TestCase
 {
-    /** @var Redirect */
-    private $plugin;
-
-    /** @var ServiceLocatorInterface */
     private $serviceLocator;
+    private $controllerManager;
+    private $controller;
 
     protected function setUp()
     {
-        $this->serviceLocator = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
-        $this->controller     = $this->prophesize('Zend\Mvc\Controller\AbstractActionController');
-
-        $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
-
-        $this->redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-                'default_url' => '/'
-            ],
-            $controllerManager->reveal()
-        );
+        $this->serviceLocator    = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $this->controller        = $this->prophesize('Zend\Mvc\Controller\AbstractActionController');
+        $this->controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
     }
 
     public function testAllowNotRoutedUrl()
     {
-        $url = '/foo';
 
-        $this->serviceLocator->get('config')
-                             ->willReturn(array('allow_not_routed_url' => true));
-
-        $mvcEvent = $this->prophesize('Zend\Mvc\MvcEvent');
-        $response = $this->prophesize('Zend\Http\PhpEnvironment\Response');
-        $mvcEvent->getResponse()->willReturn($response);
-
-        $headers = $this->prophesize('Zend\Http\Headers');
-        $headers->addHeaderLine('Location', $url);
-        $response->getHeaders()->willReturn($headers);
-        $response->setStatusCode(302)->shouldBeCalled();
-
-        $this->controller->getEvent()->willReturn($mvcEvent);
-        $this->controller->getServiceLocator()->willReturn($this->serviceLocator);
-        $this->redirect->setController($this->controller->reveal());
-        $this->redirect->toUrl($url);
-    }
-
-    public function provideMatches()
-    {
-        $routeMatch1 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $routeMatch1->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
-        $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();;
-        $routeMatch2 = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
-        $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
-
-        return array(
-            array('isnull', null),
-            array('not-bar', $routeMatch1),
-            array('bar', $routeMatch2),
-        );
-    }
-
-    /**
-     * @dataProvider provideMatches
-     */
-    public function testDisallowNotRoutedUrl($status, $match)
-    {
-        $url = '/foo';
-
-        $this->serviceLocator->get('config')
-                             ->willReturn(array('allow_not_routed_url' => false));
-
-        $request = $this->prophesize('Zend\Http\PhpEnvironment\Request');
-        $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
-        $request->setUri($url)->shouldBeCalled();
-        $this->controller->getRequest()->willReturn($request);
-
-        $mvcEvent = $this->prophesize('Zend\Mvc\MvcEvent');
-        $routeMatch = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $routeMatch->getMatchedRouteName()->willReturn('bar');
-        $mvcEvent->getRouteMatch()->willReturn($routeMatch);
-
-        $router = $this->prophesize('Zend\Mvc\Router\RouteInterface');
-        $router->match($request)->willReturn($match);
-        $this->serviceLocator->get('Router')
-                             ->willReturn($router);
-
-        if ($status !== 'isnull') {
-            $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
-            $this->serviceLocator->get('ControllerManager')
-                                 ->willReturn($controllerManager);
-
-            $controllerManager->has($status)->willReturn(true);
-        }
-
-        $response = $this->prophesize('Zend\Http\PhpEnvironment\Response');
-        $mvcEvent->getResponse()->willReturn($response);
-
-        $headers = $this->prophesize('Zend\Http\Headers');
-        $headers->addHeaderLine('Location', $url);
-        $response->getHeaders()->willReturn($headers);
-        $response->setStatusCode(302)->shouldBeCalled();
-
-        $this->controller->getEvent()->willReturn($mvcEvent);
-        $this->controller->getServiceLocator()->willReturn($this->serviceLocator);
-        $this->redirect->setController($this->controller->reveal());
-        $this->redirect->toUrl($url);
-    }
-
-    public function testDisallowNotRoutedUrlWithSameUrlWithTriggerEvent()
-    {
-        $url = '/bar';
-
-        $this->serviceLocator->get('config')
-                             ->willReturn(array('allow_not_routed_url' => false));
-
-        $request = $this->prophesize('Zend\Http\PhpEnvironment\Request');
-        $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
-        $request->setUri($url)->shouldBeCalled();
-        $this->controller->getRequest()->willReturn($request);
-
-        $this->controller->getServiceLocator()->willReturn($this->serviceLocator);
-        $this->redirect->setController($this->controller->reveal());
-
-        $eventManager = new EventManager();
-        $eventManager->attach('redirect-same-url', function() {
-            echo 'redirect to same url is not allowed.';
-        });
-        $this->redirect->setEventManager($eventManager);
-
-        ob_start();
-        $this->redirect->toUrl($url);
-        $content = ob_get_clean();
-
-        $this->assertEquals('redirect to same url is not allowed.', $content);
-    }
-
-    public function testDisallowNotRoutedUrlAndUrlSameWithDefaultUrl()
-    {
-        $url = '/bar';
-
-        $this->serviceLocator->get('config')
-                             ->willReturn(array('allow_not_routed_url' => false, 'default_url' => '/bar'));
-
-        $request = $this->prophesize('Zend\Http\PhpEnvironment\Request');
-        $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
-        $request->setUri($url)->shouldBeCalled();
-        $this->controller->getRequest()->willReturn($request);
-
-        $mvcEvent = $this->prophesize('Zend\Mvc\MvcEvent');
-        $routeMatch = $this->prophesize('Zend\Mvc\Router\RouteMatch');
-        $mvcEvent->getRouteMatch()->willReturn($routeMatch);
-
-        $router = $this->prophesize('Zend\Mvc\Router\RouteInterface');
-        $router->match($request)->willReturn(null);
-        $this->serviceLocator->get('Router')
-                             ->willReturn($router);
-
-        $response = $this->prophesize('Zend\Http\PhpEnvironment\Response');
-        $mvcEvent->getResponse()->willReturn($response);
-
-        $this->controller->getEvent()->willReturn($mvcEvent);
-        $this->controller->getServiceLocator()->willReturn($this->serviceLocator);
-        $this->redirect->setController($this->controller->reveal());
-        $this->redirect->toUrl($url);
     }
 }
