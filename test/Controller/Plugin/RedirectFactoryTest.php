@@ -34,13 +34,15 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
     public function provideInvoke()
     {
         return [
-            [],
+            [[]],
             [
-                'redirect_handler_module' => [
-                    'allow_not_routed_url' => false,
-                    'default_url' => '/'
+                [
+                    'redirect_handler_module' => [
+                        'allow_not_routed_url' => false,
+                        'default_url' => '/'
+                    ],
                 ],
-            ]
+            ],
         ];
     }
 
