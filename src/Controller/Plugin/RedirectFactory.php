@@ -19,18 +19,18 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\Mvc\Controller\ControllerManager;
+use Zend\Mvc\Controller\PluginManager;
 
 class RedirectFactory
 {
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(PluginManager $manager)
     {
         $services = $manager->getServiceLocator();
         $config   = $services->get('config');
 
         return new Redirect(
             $config['redirect_handler_module'],
-            $manager // in purpose!
+            $manager
         );
     }
 }

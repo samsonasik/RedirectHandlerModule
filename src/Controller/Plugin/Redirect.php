@@ -21,7 +21,7 @@ namespace RedirectHandlerModule\Controller\Plugin;
 
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerAwareInterface;
-use Zend\Mvc\Controller\ControllerManager;
+use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
 
 class Redirect extends BaseRedirect implements EventManagerAwareInterface
@@ -34,13 +34,13 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
     private $config;
 
     /**
-     * @var ControllerManager
+     * @var PluginManager
      */
     private $manager;
 
     public function __construct(
         array $redirectHandlerConfig,
-        ControllerManager $manager
+        PluginManager $manager
     ){
         $this->config = $redirectHandlerConfig;
         $this->manager = $manager;
