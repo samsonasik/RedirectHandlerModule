@@ -19,13 +19,32 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
 
 class Redirect extends BaseRedirect implements EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
+
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var ControllerManager
+     */
+    private $manager;
+
+    public function __construct(
+        array $redirectHandlerConfig,
+        ControllerManager $manager
+    ){
+        $this->config = $redirectHandlerConfig;
+        $this->manager = $manager;
+    }
 
     /**
      * Redirect with Handling against url
@@ -35,19 +54,21 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
      */
     public function toUrl($url)
     {
-        $controller     = $this->getController();
-        $serviceLocator = $controller->getServiceLocator();
-
-        $config = $serviceLocator->get('config');
-        $allow_not_routed_url = (isset($config['allow_not_routed_url'])) ? $config['allow_not_routed_url'] : false;
-        $default_url          = (isset($config['default_url'])) ? $config['default_url'] : '/';
+        $allow_not_routed_url = (isset($this->config['allow_not_routed_url']))
+            ? $this->config['allow_not_routed_url']
+            : false;
+        $default_url          = (isset($this->config['default_url']))
+            ? $this->config['default_url']
+            : '/';
 
         if (true === $allow_not_routed_url) {
             return parent::toUrl($url);
         }
 
-        $request        = $controller->getRequest();
-        $current_url    = $request->getRequestUri();
+        $controller = $this->getController();
+
+        $request     = $controller->getRequest();
+        $current_url = $request->getRequestUri();
         $request->setUri($url);
 
         if ($current_url === $url) {
@@ -55,15 +76,15 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             return;
         }
 
-        $currentRouteMatchName = $this->getEvent()
-                                      ->getRouteMatch()
-                                      ->getMatchedRouteName();
+        $mvcEvent              = $this->getEvent();
+        $currentRouteMatchName = $mvcEvent->getRouteMatch()->getMatchedRouteName();
+        $router                = $mvcEvent->getRouter();
 
-        if ($routeToBeMatched = $serviceLocator->get('Router')->match($request)) {
+        if ($routeToBeMatched = $router->match($request)) {
             $controller = $routeToBeMatched->getParam('controller');
 
             if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
-                && $serviceLocator->get('ControllerManager')->has($controller)
+                && $this->manager->has($controller)
             ) {
                 return parent::toUrl($url);
             }

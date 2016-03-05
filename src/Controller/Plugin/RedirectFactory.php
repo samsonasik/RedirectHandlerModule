@@ -17,10 +17,28 @@
  * and is licensed under the MIT license.
  */
 
-return array(
-    'controller_plugins' => array(
-        'factories' => array(
-            'redirect' => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
-        ),
-    ),
-);
+namespace RedirectHandlerModule\Controller\Plugin;
+
+use Zend\Mvc\Controller\PluginManager;
+
+class RedirectFactory
+{
+    public function __invoke(PluginManager $manager)
+    {
+        $services          = $manager->getServiceLocator();
+        $controllerManager = $services->get('ControllerManager');
+        $config            = $services->get('config');
+
+        if (! isset($config['redirect_handler_module'])) {
+            $config['redirect_handler_module'] = [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ];
+        }
+
+        return new Redirect(
+            $config['redirect_handler_module'],
+            $controllerManager // I KNOW, on PURPOSE!
+        );
+    }
+}

@@ -22,8 +22,10 @@ For example, we define:
 
 ```php
 return array(
-    'allow_not_routed_url' => false,
-    'default_url' => '/',
+    'redirect_handler_module' => array(
+        'allow_not_routed_url' => false,
+        'default_url' => '/',
+    ),
 );
 ```
 
