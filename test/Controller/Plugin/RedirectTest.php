@@ -72,15 +72,24 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     {
         $routeMatch1 = $this->prophesize(RouteMatch::class);
         $routeMatch1->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
+        $routeMatch1->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();;
+
         $routeMatch2 = $this->prophesize(RouteMatch::class);
         $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
+        $routeMatch2->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+
+        $routeMatch3 = $this->prophesize(RouteMatch::class);
+        $routeMatch3->getParam('controller')->willReturn('not-registered')->shouldBeCalled();
+        $routeMatch3->getParam('middleware')->willReturn('bar')->shouldBeCalled();
+        $routeMatch3->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
 
         return array(
             array('isnull', null),
             array('not-bar', $routeMatch1),
             array('bar', $routeMatch2),
+            array('bar', $routeMatch3),
         );
     }
 
