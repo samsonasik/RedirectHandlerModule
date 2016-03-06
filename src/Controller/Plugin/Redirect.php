@@ -82,9 +82,13 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
 
         if ($routeToBeMatched = $router->match($request)) {
             $controller = $routeToBeMatched->getParam('controller');
+            $middleware = $routeToBeMatched->getParam('middleware');
 
             if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
-                && $this->manager->has($controller)
+                && (
+                    $this->manager->has($controller) ||
+                    $middleware !== false
+                )
             ) {
                 return parent::toUrl($url);
             }
