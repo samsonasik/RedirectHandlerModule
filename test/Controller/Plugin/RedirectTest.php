@@ -132,7 +132,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch->getMatchedRouteName()->willReturn('bar');
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(RouteInterface::class)) {
+        if (interface_exists(RouteInterface::class)) {
             $router = $this->prophesize(RouteInterface::class);
         } else {
             $router = $this->prophesize(V2RouteInterface::class);
