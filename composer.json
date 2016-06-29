@@ -2,7 +2,7 @@
     "name": "samsonasik/redirect-handler-module",
     "type": "library",
     "description": "ZF2 module to for Url Redirect handling",
-    "keywords": ["redirect","zf2","handler"],
+    "keywords": ["redirect","zf2","zf3","handler"],
     "homepage": "https://github.com/samsonasik/RedirectHandlerModule",
     "license": "MIT",
     "authors": [
@@ -15,12 +15,12 @@
     ],
     "require": {
         "php": "^5.5|^7.0",
-        "zendframework/zend-mvc": "~2.4"
+        "zendframework/zend-mvc": "~2.4 || ^3.0.1"
     },
     "require-dev": {
         "zendframework/zend-http": "~2.4",
         "phpunit/phpunit": "~4.0|~5.0",
-        "satooshi/php-coveralls": "dev-master",
+        "satooshi/php-coveralls": "^1.0.1",
         "phpunit/phpcov": "~2.0"
     },
     "autoload": {
