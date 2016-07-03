@@ -7,7 +7,7 @@ RedirectHandlerModule
 [![Coverage Status](https://coveralls.io/repos/samsonasik/RedirectHandlerModule/badge.svg?branch=master)](https://coveralls.io/r/samsonasik/RedirectHandlerModule)
 [![Downloads](https://img.shields.io/packagist/dt/samsonasik/redirect-handler-module.svg?style=flat-square)](https://packagist.org/packages/samsonasik/redirect-handler-module)
 
-*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2 application. It simply override existing ZF2 redirect plugin, so we can just use it.
+*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2/zf3 application. It simply override existing ZF2/ZF3 redirect plugin, so we can just use it.
 
 For example, we use `redirect()` plugin in your controller:
 
