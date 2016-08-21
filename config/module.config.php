@@ -20,7 +20,11 @@
 return array(
     'controller_plugins' => array(
         'factories' => array(
-            'redirect' => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'Redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            \Zend\Mvc\Controller\Plugin\Redirect::class  => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'zendmvccontrollerpluginredirect'            => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
         ),
     ),
 );
+

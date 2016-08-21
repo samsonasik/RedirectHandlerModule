@@ -51,11 +51,7 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoke($config)
     {
-        $pluginManager = $this->prophesize('Zend\Mvc\Controller\PluginManager');
         $services      = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
-
-        $pluginManager->getServiceLocator()->willReturn($services)
-                                           ->shouldBeCalled();
 
         $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
         $services->get('ControllerManager')->willReturn($controllerManager)
@@ -64,6 +60,6 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
         $services->get('config')->willReturn($config)
                                 ->shouldBeCalled();
 
-        $this->factory->__invoke($pluginManager->reveal(), $controllerManager->reveal());
+        $this->factory->__invoke($services->reveal());
     }
 }
