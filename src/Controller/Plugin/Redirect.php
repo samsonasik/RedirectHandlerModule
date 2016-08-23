@@ -77,7 +77,8 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         }
 
         $mvcEvent              = $this->getEvent();
-        $currentRouteMatchName = $mvcEvent->getRouteMatch()->getMatchedRouteName();
+        $routeMatch            = $mvcEvent->getRouteMatch();
+        $currentRouteMatchName = $routeMatch->getMatchedRouteName();
         $router                = $mvcEvent->getRouter();
 
         if ($routeToBeMatched = $router->match($request)) {
@@ -86,10 +87,17 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
 
             if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
                 && (
-                    $this->manager->has($controller) ||
+                    $this->manager->has($controller)
+                    ||
                     $middleware !== false
                 )
             ) {
+                return parent::toUrl($url);
+            }
+
+            $action        = $routeToBeMatched->getParam('action');
+            $currentAction = $routeMatch->getParam('action');
+            if ($action !== $currentAction) {
                 return parent::toUrl($url);
             }
         }

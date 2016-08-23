@@ -90,6 +90,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
         $routeMatch2->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        $routeMatch2->getParam('action')->willReturn('bar')->shouldBeCalled();
 
         if (class_exists(RouteMatch::class)) {
             $routeMatch3 = $this->prophesize(RouteMatch::class);
@@ -99,6 +100,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch3->getParam('controller')->willReturn('not-registered')->shouldBeCalled();
         $routeMatch3->getParam('middleware')->willReturn('bar')->shouldBeCalled();
         $routeMatch3->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        $routeMatch3->getParam('action')->willReturn('bar')->shouldBeCalled();
 
         return array(
             array('isnull', null),
@@ -134,7 +136,10 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         } else {
             $routeMatch = $this->prophesize(V2RouteMatch::class);
         }
-        $routeMatch->getMatchedRouteName()->willReturn('bar');
+        $routeMatch->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        if ($status === 'bar') {
+            $routeMatch->getParam('action')->willReturn('foo')->shouldBeCalled();
+        }
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
         if (interface_exists(RouteInterface::class)) {
