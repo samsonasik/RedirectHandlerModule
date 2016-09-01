@@ -57,14 +57,11 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $allow_not_routed_url = (isset($this->config['allow_not_routed_url']))
             ? $this->config['allow_not_routed_url']
             : false;
-        $default_url          = (isset($this->config['default_url']))
-            ? $this->config['default_url']
-            : '/';
 
         if (true === $allow_not_routed_url) {
             return parent::toUrl($url);
         }
-
+        
         $controller = $this->getController();
 
         $request     = $controller->getRequest();
@@ -101,7 +98,10 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
                 return parent::toUrl($url);
             }
         }
-
+        
+        $default_url = (isset($this->config['default_url']))
+            ? $this->config['default_url']
+            : '/'; 
         return parent::toUrl($default_url);
     }
 }
