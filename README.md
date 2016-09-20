@@ -36,7 +36,11 @@ return array(
 
 It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` options. 
 
-It disable redirect to self, so you can't redirect to self. While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
+It disable redirect to self, so you can't redirect to self. 
+
+> if you define exclude_urls which one of them is your own current url, its your risk :).
+
+While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
 
 ```php
 class Module
