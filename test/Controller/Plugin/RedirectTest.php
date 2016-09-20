@@ -69,6 +69,37 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->setController($this->controller->reveal());
         $this->redirect->toUrl($url);
     }
+    
+    public function testExcludedUrl()
+    {
+        $this->redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+                'options' => [
+                    'exclude_urls' => [
+                        'https://www.github.com/samsonasik/RedirectHandlerModule'
+                    ],
+                ],
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
+
+        $mvcEvent = $this->prophesize(MvcEvent::class);
+        $response = $this->prophesize(Response::class);
+        $mvcEvent->getResponse()->willReturn($response);
+        $this->controller->getEvent()->willReturn($mvcEvent);
+
+        $headers = $this->prophesize(Headers::class);
+        $headers->addHeaderLine('Location', $url);
+        $response->getHeaders()->willReturn($headers);
+        $response->setStatusCode(302)->shouldBeCalled();
+
+        $this->redirect->setController($this->controller->reveal());
+        $this->redirect->toUrl($url);
+    }
 
     public function provideMatches()
     {
@@ -103,24 +134,48 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch3->getParam('action')->willReturn('bar')->shouldBeCalled();
 
         return array(
-            array('isnull', null),
-            array('not-bar', $routeMatch1),
-            array('bar', $routeMatch2),
-            array('bar', $routeMatch3),
+            array('isnull', null, [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ],),
+            array('not-bar', $routeMatch1, [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ],),
+            array('bar', $routeMatch2, [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ],),
+            array('bar', $routeMatch3, [
+                'allow_not_routed_url' => false,
+                'default_url' => '/'
+            ],),
+            
+            
+            array('isnull', null, [
+                'allow_not_routed_url' => false,
+            ],),
+            array('not-bar', $routeMatch1, [
+                'allow_not_routed_url' => false,
+            ],),
+            array('bar', $routeMatch2, [
+                'allow_not_routed_url' => false,
+            ],),
+            array('bar', $routeMatch3, [
+                'allow_not_routed_url' => false,
+            ],),
         );
     }
 
     /**
      * @dataProvider provideMatches
      */
-    public function testDisallowNotRoutedUrl($status, $match)
+    public function testDisallowNotRoutedUrl($status, $match, $config)
     {
         $url = '/foo';
 
         $this->redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-            ],
+            $config,
             $this->controllerManager->reveal()
         );
 
@@ -167,15 +222,34 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->setController($this->controller->reveal());
         $this->redirect->toUrl($url);
     }
-
-    public function testDisallowNotRoutedUrlWithSameUrlWithTriggerEvent()
+    
+    public function provideRedirectConfig()
+    {
+        return [
+            [
+                [
+                    'allow_not_routed_url' => false,
+                ],
+            ],
+            [
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/'
+                ],
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider provideRedirectConfig
+     *  @param $config
+     */
+    public function testDisallowNotRoutedUrlWithSameUrlWithTriggerEvent($config)
     {
         $url = '/bar';
 
         $this->redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-            ],
+            $config,
             $this->controllerManager->reveal()
         );
 

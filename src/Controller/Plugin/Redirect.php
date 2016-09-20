@@ -57,8 +57,11 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $allow_not_routed_url = (isset($this->config['allow_not_routed_url']))
             ? $this->config['allow_not_routed_url']
             : false;
+        $exclude_urls = (isset($this->config['options']['exclude_urls']))
+            ? $this->config['options']['exclude_urls']
+            : [];
 
-        if (true === $allow_not_routed_url) {
+        if (true === $allow_not_routed_url || in_array($url, $exclude_urls)) {
             return parent::toUrl($url);
         }
         
