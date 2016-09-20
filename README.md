@@ -38,7 +38,7 @@ It means, we can't allow to make redirect to outside registered routes, whenever
 
 It disable redirect to self, so you can't redirect to self. 
 
-> if you define exclude_urls which one of them is your own current url, its your risk :).
+> if you define exclude_urls which one of them is your own current url, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls is not your own urls.
 
 While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
 
