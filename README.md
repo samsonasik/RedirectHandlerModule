@@ -25,11 +25,18 @@ return array(
     'redirect_handler_module' => array(
         'allow_not_routed_url' => false,
         'default_url' => '/',
+        'options' => array(
+            'exclude_urls' => array(
+                // 'https://www.github.com/samsonasik/RedirectHandlerModule',
+            ), // to allow excluded urls to be allowed
+        ),
     ),
 );
 ```
 
-It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. Also, it disable to self, so you can't redirect to self. While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
+It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` options. 
+
+It disable redirect to self, so you can't redirect to self. While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your Module::onBootstrap($e):
 
 ```php
 class Module

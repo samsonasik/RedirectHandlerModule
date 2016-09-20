@@ -4,5 +4,10 @@ return array(
     'redirect_handler_module' => array(
         'allow_not_routed_url' => false,
         'default_url' => '/',
+        'options' => array(
+            'exclude_urls' => array(
+                // 'https://www.github.com/samsonasik/RedirectHandlerModule',
+            ), // to allow excluded urls to be allowed
+        ),
     ),
 );
