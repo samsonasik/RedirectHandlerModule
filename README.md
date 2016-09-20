@@ -28,7 +28,7 @@ return array(
         'options' => array(
             'exclude_urls' => array(
                 // 'https://www.github.com/samsonasik/RedirectHandlerModule',
-            ), // to allow excluded urls to be allowed
+            ), // to allow excluded urls to always be redirected
         ),
     ),
 );
