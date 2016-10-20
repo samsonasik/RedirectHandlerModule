@@ -16,8 +16,8 @@ script:
   - ./vendor/bin/phpunit --coverage-text
 
 after_script:
-  - "if [ $(phpenv version-name) = '7.0' ]; then php ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage/; fi"
-  - "if [ $(phpenv version-name) = '7.0' ]; then php ./vendor/bin/coveralls -v --exclude-no-stmt; fi"
+  - if [ $(phpenv version-name) = '7.0' ]; then php ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage/; fi
+  - if [ $(phpenv version-name) = '7.0' ]; then php ./vendor/bin/coveralls -v --exclude-no-stmt; fi
 
 notifications:
   email: false
