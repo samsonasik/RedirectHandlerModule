@@ -133,38 +133,38 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch3->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $routeMatch3->getParam('action')->willReturn('bar')->shouldBeCalled();
 
-        return array(
-            array('isnull', null, [
+        return [
+            ['isnull', null, [
                 'allow_not_routed_url' => false,
                 'default_url' => '/'
-            ],),
-            array('not-bar', $routeMatch1, [
+            ],],
+            ['not-bar', $routeMatch1, [
                 'allow_not_routed_url' => false,
                 'default_url' => '/'
-            ],),
-            array('bar', $routeMatch2, [
+            ],],
+            ['bar', $routeMatch2, [
                 'allow_not_routed_url' => false,
                 'default_url' => '/'
-            ],),
-            array('bar', $routeMatch3, [
+            ],],
+            ['bar', $routeMatch3, [
                 'allow_not_routed_url' => false,
                 'default_url' => '/'
-            ],),
+            ],],
             
             
-            array('isnull', null, [
+            ['isnull', null, [
                 'allow_not_routed_url' => false,
-            ],),
-            array('not-bar', $routeMatch1, [
+            ],],
+            ['not-bar', $routeMatch1, [
                 'allow_not_routed_url' => false,
-            ],),
-            array('bar', $routeMatch2, [
+            ],],
+            ['bar', $routeMatch2, [
                 'allow_not_routed_url' => false,
-            ],),
-            array('bar', $routeMatch3, [
+            ],],
+            ['bar', $routeMatch3, [
                 'allow_not_routed_url' => false,
-            ],),
-        );
+            ],],
+        ];
     }
 
     /**

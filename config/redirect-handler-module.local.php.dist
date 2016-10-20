@@ -1,13 +1,13 @@
 <?php
 
-return array(
-    'redirect_handler_module' => array(
+return [
+    'redirect_handler_module' => [
         'allow_not_routed_url' => false,
         'default_url' => '/',
-        'options' => array(
-            'exclude_urls' => array(
+        'options' => [
+            'exclude_urls' => [
                 // 'https://www.github.com/samsonasik/RedirectHandlerModule',
-            ), // to allow excluded urls to always be redirected
-        ),
-    ),
-);
+            ], // to allow excluded urls to always be redirected
+        ],
+    ],
+];

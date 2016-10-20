@@ -17,14 +17,14 @@
  * and is licensed under the MIT license.
  */
 
-return array(
-    'controller_plugins' => array(
-        'factories' => array(
+return [
+    'controller_plugins' => [
+        'factories' => [
             'redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
             'Redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
             \Zend\Mvc\Controller\Plugin\Redirect::class  => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
             'zendmvccontrollerpluginredirect'            => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
-        ),
-    ),
-);
+        ],
+    ],
+];
 

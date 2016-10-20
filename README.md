@@ -21,17 +21,17 @@ if the passed `$redirect` as url is a valid and registered in the routes, it use
 For example, we define:
 
 ```php
-return array(
-    'redirect_handler_module' => array(
+return [
+    'redirect_handler_module' => [
         'allow_not_routed_url' => false,
         'default_url' => '/',
-        'options' => array(
-            'exclude_urls' => array(
+        'options' => [
+            'exclude_urls' => [
                 // 'https://www.github.com/samsonasik/RedirectHandlerModule',
-            ), // to allow excluded urls to always be redirected
-        ),
-    ),
-);
+            ], // to allow excluded urls to always be redirected
+        ],
+    ],
+];
 ```
 
 It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` options. 
@@ -70,12 +70,12 @@ composer require samsonasik/redirect-handler-module
  - register to `config/application.config.php`:
 
 ```php
-return array(
-    'modules' => array(
+return [
+    'modules' => [
         // ...
         'RedirectHandlerModule',
-    ),
-);
+    ],
+];
 ```
 
 Contributing
