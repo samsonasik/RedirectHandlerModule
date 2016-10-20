@@ -39,7 +39,7 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
                 [
                     'redirect_handler_module' => [
                         'allow_not_routed_url' => false,
-                        'default_url' => '/'
+                        'default_url' => '/',
                     ],
                 ],
             ],
@@ -51,7 +51,7 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoke($config)
     {
-        $services      = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $services = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
 
         $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
         $services->get('ControllerManager')->willReturn($controllerManager)
@@ -65,21 +65,15 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
 
     public function testInvokeWithServiceLocatorAwareInterfaceInstance()
     {
-        if (class_exists('Zend\ServiceManager\ServiceLocatorAwareInterface')) {
-            $serviceLocator = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $config = [];
+        $services = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager->getServiceLocator()->willReturn($services)
+                                               ->shouldBeCalled();
 
-            $services = $this->prophesize('Zend\ServiceManager\ServiceLocatorAwareInterface');
-            $services->getServiceLocator()->willReturn($serviceLocator)
-                                          ->shouldBeCalled();
+        $services->get('config')->willReturn($config)
+                               ->shouldBeCalled();
 
-            $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
-            $serviceLocator->get('ControllerManager')->willReturn($controllerManager)
-                                             ->shouldBeCalled();
-
-            $serviceLocator->get('config')->willReturn($config)
-                                  ->shouldBeCalled();
-
-            $this->factory->__invoke($services->reveal());
-        }
+        $this->factory->__invoke($controllerManager->reveal());
     }
 }

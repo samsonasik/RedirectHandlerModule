@@ -41,15 +41,16 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
     public function __construct(
         array $redirectHandlerConfig,
         ControllerManager $manager
-    ){
+    ) {
         $this->config = $redirectHandlerConfig;
         $this->manager = $manager;
     }
 
     /**
-     * Redirect with Handling against url
+     * Redirect with Handling against url.
      *
-     * @param  string $url
+     * @param string $url
+     *
      * @return Response
      */
     public function toUrl($url)
@@ -64,22 +65,23 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         if (true === $allow_not_routed_url || in_array($url, $exclude_urls)) {
             return parent::toUrl($url);
         }
-        
+
         $controller = $this->getController();
 
-        $request     = $controller->getRequest();
+        $request = $controller->getRequest();
         $current_url = $request->getRequestUri();
         $request->setUri($url);
 
         if ($current_url === $url) {
             $this->getEventManager()->trigger('redirect-same-url');
+
             return;
         }
 
-        $mvcEvent              = $this->getEvent();
-        $routeMatch            = $mvcEvent->getRouteMatch();
+        $mvcEvent = $this->getEvent();
+        $routeMatch = $mvcEvent->getRouteMatch();
         $currentRouteMatchName = $routeMatch->getMatchedRouteName();
-        $router                = $mvcEvent->getRouter();
+        $router = $mvcEvent->getRouter();
 
         if ($routeToBeMatched = $router->match($request)) {
             $controller = $routeToBeMatched->getParam('controller');
@@ -95,16 +97,17 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
                 return parent::toUrl($url);
             }
 
-            $action        = $routeToBeMatched->getParam('action');
+            $action = $routeToBeMatched->getParam('action');
             $currentAction = $routeMatch->getParam('action');
             if ($action !== $currentAction) {
                 return parent::toUrl($url);
             }
         }
-        
+
         $default_url = (isset($this->config['default_url']))
             ? $this->config['default_url']
-            : '/'; 
+            : '/';
+
         return parent::toUrl($default_url);
     }
 }

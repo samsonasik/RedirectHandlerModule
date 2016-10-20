@@ -39,7 +39,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testGetConfig()
     {
-        $config = include __DIR__ . '/../config/module.config.php';
+        $config = include __DIR__.'/../config/module.config.php';
         $this->assertSame($config, $this->module->getConfig());
     }
 }

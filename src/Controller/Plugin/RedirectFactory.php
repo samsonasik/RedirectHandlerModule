@@ -19,25 +19,26 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\Mvc\Controller\ControllerManager;
 
 class RedirectFactory
 {
     public function __invoke($manager)
     {
-        if ($manager instanceof ServiceLocatorAwareInterface) {
-            $services          = $manager->getServiceLocator();
+        if ($manager instanceof ControllerManager) {
+            $services = $manager->getServiceLocator();
+            $controllerManager = $manager;
         } else {
-            $services          = $manager;
+            $services = $manager;
+            $controllerManager = $services->get('ControllerManager');
         }
 
-        $controllerManager = $services->get('ControllerManager');
-        $config            = $services->get('config');
+        $config = $services->get('config');
 
-        if (! isset($config['redirect_handler_module'])) {
+        if (!isset($config['redirect_handler_module'])) {
             $config['redirect_handler_module'] = [
                 'allow_not_routed_url' => false,
-                'default_url' => '/'
+                'default_url' => '/',
             ];
         }
 

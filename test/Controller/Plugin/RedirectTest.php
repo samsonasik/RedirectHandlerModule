@@ -40,7 +40,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->controller        = $this->prophesize(AbstractActionController::class);
+        $this->controller = $this->prophesize(AbstractActionController::class);
         $this->controllerManager = $this->prophesize(ControllerManager::class);
     }
 
@@ -49,7 +49,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect = new Redirect(
             [
                 'allow_not_routed_url' => true,
-                'default_url' => '/'
+                'default_url' => '/',
             ],
             $this->controllerManager->reveal()
         );
@@ -69,7 +69,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->setController($this->controller->reveal());
         $this->redirect->toUrl($url);
     }
-    
+
     public function testExcludedUrl()
     {
         $this->redirect = new Redirect(
@@ -78,7 +78,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                 'default_url' => '/',
                 'options' => [
                     'exclude_urls' => [
-                        'https://www.github.com/samsonasik/RedirectHandlerModule'
+                        'https://www.github.com/samsonasik/RedirectHandlerModule',
                     ],
                 ],
             ],
@@ -111,7 +111,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
 
         $routeMatch1->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
         $routeMatch1->getParam('middleware')->willReturn(false)->shouldBeCalled();
-        $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();;
+        $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();
 
         if (class_exists(RouteMatch::class)) {
             $routeMatch2 = $this->prophesize(RouteMatch::class);
@@ -136,34 +136,33 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         return [
             ['isnull', null, [
                 'allow_not_routed_url' => false,
-                'default_url' => '/'
-            ],],
+                'default_url' => '/',
+            ]],
             ['not-bar', $routeMatch1, [
                 'allow_not_routed_url' => false,
-                'default_url' => '/'
-            ],],
+                'default_url' => '/',
+            ]],
             ['bar', $routeMatch2, [
                 'allow_not_routed_url' => false,
-                'default_url' => '/'
-            ],],
+                'default_url' => '/',
+            ]],
             ['bar', $routeMatch3, [
                 'allow_not_routed_url' => false,
-                'default_url' => '/'
-            ],],
-            
-            
+                'default_url' => '/',
+            ]],
+
             ['isnull', null, [
                 'allow_not_routed_url' => false,
-            ],],
+            ]],
             ['not-bar', $routeMatch1, [
                 'allow_not_routed_url' => false,
-            ],],
+            ]],
             ['bar', $routeMatch2, [
                 'allow_not_routed_url' => false,
-            ],],
+            ]],
             ['bar', $routeMatch3, [
                 'allow_not_routed_url' => false,
-            ],],
+            ]],
         ];
     }
 
@@ -222,7 +221,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->setController($this->controller->reveal());
         $this->redirect->toUrl($url);
     }
-    
+
     public function provideRedirectConfig()
     {
         return [
@@ -234,14 +233,15 @@ class RedirectTest extends PHPUnit_Framework_TestCase
             [
                 [
                     'allow_not_routed_url' => false,
-                    'default_url' => '/'
+                    'default_url' => '/',
                 ],
-            ]
+            ],
         ];
     }
-    
+
     /**
      * @dataProvider provideRedirectConfig
+     *
      *  @param $config
      */
     public function testDisallowNotRoutedUrlWithSameUrlWithTriggerEvent($config)
@@ -261,7 +261,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->setController($this->controller->reveal());
 
         $eventManager = new EventManager();
-        $eventManager->attach('redirect-same-url', function() {
+        $eventManager->attach('redirect-same-url', function () {
             echo 'redirect to same url is not allowed.';
         });
         $this->redirect->setEventManager($eventManager);
@@ -280,7 +280,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect = new Redirect(
             [
                 'allow_not_routed_url' => false,
-                'default_url' => '/bar'
+                'default_url' => '/bar',
             ],
             $this->controllerManager->reveal()
         );
