@@ -16,8 +16,8 @@ script:
   - ./vendor/bin/phpunit --coverage-text
 
 after_script:
-  - if [[ $TRAVIS_PHP_VERSION = 7.0 ]]; then php ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage/; fi
-  - if [[ $TRAVIS_PHP_VERSION = 7.0 ]]; then php ./vendor/bin/coveralls -v --exclude-no-stmt; fi
+  - php ./vendor/bin/phpcov merge --clover ./build/logs/clover.xml ./build/coverage/
+  - php ./vendor/bin/coveralls -v --exclude-no-stmt
 
 notifications:
   email: false
