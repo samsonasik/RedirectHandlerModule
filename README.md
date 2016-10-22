@@ -47,12 +47,16 @@ class Module
 {
     public function onBootstrap($e)
     {
-        $eventManager  = $e->getApplication()->getEventManager();
+        $app           = $e->getApplication();
+        $eventManager  = $app->getEventManager();
         $sharedManager = $eventManager->getSharedManager();
 
         $sharedManager->attach('RedirectHandlerModule\Controller\Plugin\Redirect', 'redirect-same-url', function() {
             die('You need to use different URL for Redirect');
         });
+        
+        $plugin = $app->getServiceManager()->get('ControllerPluginManager')->get('redirect');
+        $plugin->setEventManager($eventManager);
     }
 }
 ```
