@@ -84,14 +84,13 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $currentRouteMatchName = $routeMatch->getMatchedRouteName();
         $router = $mvcEvent->getRouter();
         
-        $uriCurrentHost    = (new Uri($current_url))->getHost();
-        $uriTargetHost     = (new Uri($url))->getHost();
-        
+        $uriCurrentHost = (new Uri($router->getRequestUri()))->getHost();
+        $uriTargetHost  = (new Uri($url))->getHost();;
         if (($routeToBeMatched = $router->match($request))
             && (
                 $uriTargetHost === null
                 ||
-                $uriCurrentHost !== $uriTargetHost
+                $uriCurrentHost === $uriTargetHost 
             )
         ) {
             $controller = $routeToBeMatched->getParam('controller');

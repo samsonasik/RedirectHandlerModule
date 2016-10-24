@@ -29,9 +29,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteInterface as V2RouteInterface;
+use Zend\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteInterface;
 use Zend\Router\RouteMatch;
+use Zend\Router\Http\TreeRouteStack;
 
 class RedirectTest extends PHPUnit_Framework_TestCase
 {
@@ -237,16 +239,18 @@ class RedirectTest extends PHPUnit_Framework_TestCase
             $routeMatch = $this->prophesize(V2RouteMatch::class);
         }
         $routeMatch->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
-        if ($status === 'bar') {
+        if ($status === 'bar' && $url !== 'http://www.google.com') {
             $routeMatch->getParam('action')->willReturn('foo')->shouldBeCalled();
         }
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
         if (interface_exists(RouteInterface::class)) {
-            $router = $this->prophesize(RouteInterface::class);
+            $router = $this->prophesize(TreeRouteStack::class);
         } else {
-            $router = $this->prophesize(V2RouteInterface::class);
+            $router = $this->prophesize(V2TreeRouteStack::class);
         }
+        
+        $router->getRequestUri()->willReturn('http://localhost/bar');
 
         $router->match($request)->willReturn($match);
         $mvcEvent->getRouter()->willReturn($router);
