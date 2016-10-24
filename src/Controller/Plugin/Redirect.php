@@ -23,6 +23,7 @@ use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
+use Zend\Uri\Uri;
 
 class Redirect extends BaseRedirect implements EventManagerAwareInterface
 {
@@ -71,8 +72,8 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $request = $controller->getRequest();
         $current_url = $request->getRequestUri();
         $request->setUri($url);
-
-        if ($current_url === $url) {
+        
+        if ($current_url === (new Uri($url))->__toString()) {
             $this->getEventManager()->trigger('redirect-same-url');
 
             return;
@@ -82,10 +83,19 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $routeMatch = $mvcEvent->getRouteMatch();
         $currentRouteMatchName = $routeMatch->getMatchedRouteName();
         $router = $mvcEvent->getRouter();
-
-        if ($routeToBeMatched = $router->match($request)) {
+        
+        $uriCurrentHost    = (new Uri($current_url))->getHost();
+        $uriTargetHost     = (new Uri($url))->getHost();
+        
+        if (($routeToBeMatched = $router->match($request))
+            && (
+                $uriTargetHost === null
+                ||
+                $uriCurrentHost !== $uriTargetHost
+            )
+        ) {
             $controller = $routeToBeMatched->getParam('controller');
-            $middleware = $routeToBeMatched->getParam('middleware');
+            $middleware = $routeToBeMatched->getParam('middleware'); 
 
             if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
                 && (

@@ -134,45 +134,91 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $routeMatch3->getParam('action')->willReturn('bar')->shouldBeCalled();
 
         return [
-            ['isnull', null, [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-            ]],
-            ['not-bar', $routeMatch1, [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-            ]],
-            ['bar', $routeMatch2, [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-            ]],
-            ['bar', $routeMatch3, [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-            ]],
+            [
+                'isnull',
+                null,
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/',
+                ]
+            ],
+            
+            [
+                'not-bar',
+                $routeMatch1,
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/',
+                ]
+            ],
+            
+            [
+                'bar',
+                $routeMatch2,
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/',
+                ]
+            ],
+            
+            [
+                'bar',
+                $routeMatch2,
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/',
+                ],
+                'http://www.google.com'
+            ],
+            
+            [
+                'bar',
+                $routeMatch3,
+                [
+                    'allow_not_routed_url' => false,
+                    'default_url' => '/',
+                ]
+            ],
 
-            ['isnull', null, [
-                'allow_not_routed_url' => false,
-            ]],
-            ['not-bar', $routeMatch1, [
-                'allow_not_routed_url' => false,
-            ]],
-            ['bar', $routeMatch2, [
-                'allow_not_routed_url' => false,
-            ]],
-            ['bar', $routeMatch3, [
-                'allow_not_routed_url' => false,
-            ]],
+            [
+                'isnull',
+                null,
+                [
+                    'allow_not_routed_url' => false,
+                ]
+            ],
+            
+            [
+                'not-bar',
+                $routeMatch1, 
+                [
+                    'allow_not_routed_url' => false,
+                ]
+            ],
+            
+            [
+                'bar',
+                $routeMatch2,
+                [
+                    'allow_not_routed_url' => false,
+                ]
+            ],
+            
+            [
+                'bar',
+                $routeMatch3,
+                [
+                    'allow_not_routed_url' => false,
+                ]
+            ],
         ];
     }
 
     /**
      * @dataProvider provideMatches
      */
-    public function testDisallowNotRoutedUrl($status, $match, $config)
+    public function testDisallowNotRoutedUrl($status, $match, $config, $url = '/foo')
     {
-        $url = '/foo';
-
         $this->redirect = new Redirect(
             $config,
             $this->controllerManager->reveal()
