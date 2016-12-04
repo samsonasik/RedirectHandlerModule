@@ -29,6 +29,9 @@ return [
             'exclude_urls' => [
                 // 'https://www.github.com/samsonasik/RedirectHandlerModule',
             ], // to allow excluded urls to always be redirected
+            'exclude_hosts' => [
+                // 'www.github.com'
+            ],
         ],
     ],
 ];
@@ -36,9 +39,9 @@ return [
 
 It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. It also disable redirect to self, so you can't redirect to self.
 
-For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` options. 
- 
-> if you define exclude_urls which one of them is your own current url, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls is not your own urls.
+For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` or `exclude_hosts` options.
+
+> if you define exclude_urls and/or exclude_hosts options, which one of them is your own current url, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls/exclude_hosts is not your own urls.
 
 While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your `Module::onBootstrap($e)`:
 
@@ -54,7 +57,7 @@ class Module
         $sharedManager->attach('RedirectHandlerModule\Controller\Plugin\Redirect', 'redirect-same-url', function() {
             die('You need to use different URL for Redirect');
         });
-        
+
         $plugin = $app->getServiceManager()->get('ControllerPluginManager')->get('redirect');
         $plugin->setEventManager($eventManager);
     }

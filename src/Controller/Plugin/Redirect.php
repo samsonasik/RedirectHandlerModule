@@ -62,8 +62,15 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $exclude_urls = (isset($this->config['options']['exclude_urls']))
             ? $this->config['options']['exclude_urls']
             : [];
+        $exclude_hosts = (isset($this->config['options']['exclude_hosts']))
+            ? $this->config['options']['exclude_hosts']
+            : [];
 
-        if (true === $allow_not_routed_url || in_array($url, $exclude_urls)) {
+        $uriTargetHost  = (new Uri($url))->getHost();
+        if (true === $allow_not_routed_url ||
+            in_array($url, $exclude_urls) ||
+            in_array($uriTargetHost, $exclude_hosts)
+        ) {
             return parent::toUrl($url);
         }
 
@@ -72,7 +79,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $request = $controller->getRequest();
         $current_url = $request->getRequestUri();
         $request->setUri($url);
-        
+
         if ($current_url === (new Uri($url))->__toString()) {
             $this->getEventManager()->trigger('redirect-same-url');
 
@@ -83,18 +90,17 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $routeMatch = $mvcEvent->getRouteMatch();
         $currentRouteMatchName = $routeMatch->getMatchedRouteName();
         $router = $mvcEvent->getRouter();
-        
+
         $uriCurrentHost = (new Uri($router->getRequestUri()))->getHost();
-        $uriTargetHost  = (new Uri($url))->getHost();;
         if (($routeToBeMatched = $router->match($request))
             && (
                 $uriTargetHost === null
                 ||
-                $uriCurrentHost === $uriTargetHost 
+                $uriCurrentHost === $uriTargetHost
             )
         ) {
             $controller = $routeToBeMatched->getParam('controller');
-            $middleware = $routeToBeMatched->getParam('middleware'); 
+            $middleware = $routeToBeMatched->getParam('middleware');
 
             if ($routeToBeMatched->getMatchedRouteName() !== $currentRouteMatchName
                 && (

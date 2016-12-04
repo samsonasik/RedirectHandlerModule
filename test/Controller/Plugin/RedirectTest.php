@@ -72,7 +72,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $this->redirect->toUrl($url);
     }
 
-    public function testExcludedUrl()
+    public function testExcludedUrls()
     {
         $this->redirect = new Redirect(
             [
@@ -81,6 +81,37 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                 'options' => [
                     'exclude_urls' => [
                         'https://www.github.com/samsonasik/RedirectHandlerModule',
+                    ],
+                ],
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
+
+        $mvcEvent = $this->prophesize(MvcEvent::class);
+        $response = $this->prophesize(Response::class);
+        $mvcEvent->getResponse()->willReturn($response);
+        $this->controller->getEvent()->willReturn($mvcEvent);
+
+        $headers = $this->prophesize(Headers::class);
+        $headers->addHeaderLine('Location', $url);
+        $response->getHeaders()->willReturn($headers);
+        $response->setStatusCode(302)->shouldBeCalled();
+
+        $this->redirect->setController($this->controller->reveal());
+        $this->redirect->toUrl($url);
+    }
+
+    public function testExcludedHosts()
+    {
+        $this->redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+                'options' => [
+                    'exclude_hosts' => [
+                        'www.github.com',
                     ],
                 ],
             ],
@@ -144,7 +175,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                     'default_url' => '/',
                 ]
             ],
-            
+
             [
                 'not-bar',
                 $routeMatch1,
@@ -153,7 +184,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                     'default_url' => '/',
                 ]
             ],
-            
+
             [
                 'bar',
                 $routeMatch2,
@@ -162,7 +193,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                     'default_url' => '/',
                 ]
             ],
-            
+
             [
                 'bar',
                 $routeMatch2,
@@ -172,7 +203,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                 ],
                 'http://www.google.com'
             ],
-            
+
             [
                 'bar',
                 $routeMatch3,
@@ -189,15 +220,15 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                     'allow_not_routed_url' => false,
                 ]
             ],
-            
+
             [
                 'not-bar',
-                $routeMatch1, 
+                $routeMatch1,
                 [
                     'allow_not_routed_url' => false,
                 ]
             ],
-            
+
             [
                 'bar',
                 $routeMatch2,
@@ -205,7 +236,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                     'allow_not_routed_url' => false,
                 ]
             ],
-            
+
             [
                 'bar',
                 $routeMatch3,
@@ -249,7 +280,7 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         } else {
             $router = $this->prophesize(V2TreeRouteStack::class);
         }
-        
+
         $router->getRequestUri()->willReturn('http://localhost/bar');
 
         $router->match($request)->willReturn($match);
