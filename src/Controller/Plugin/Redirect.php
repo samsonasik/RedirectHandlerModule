@@ -117,6 +117,10 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             if ($action !== $currentAction) {
                 return parent::toUrl($url);
             }
+
+            if ($url !== $current_url) {
+                return parent::toUrl($url);
+            }
         }
 
         $default_url = (isset($this->config['default_url']))
