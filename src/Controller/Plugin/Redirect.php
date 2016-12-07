@@ -77,10 +77,12 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $controller = $this->getController();
 
         $request = $controller->getRequest();
-        $current_url = $request->getRequestUri();
+        $current_uri = $request->getRequestUri();
         $request->setUri($url);
 
-        if ($current_url === (new Uri($url))->__toString()) {
+        $uriTarget = (new Uri($url))->__toString();
+
+        if ($current_uri === $uriTarget) {
             $this->getEventManager()->trigger('redirect-same-url');
 
             return;
@@ -120,7 +122,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             }
 
             if ($routeToBeMatchedRouteName === $currentRouteMatchName
-                && $url !== $current_url
+                && $uriTarget !== $current_uri
             ) {
                 return parent::toUrl($url);
             }
