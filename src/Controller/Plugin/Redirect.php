@@ -100,32 +100,28 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
                 ||
                 $uriCurrentHost === $uriTargetHost
             )
-        ) {
-            $controller = $routeToBeMatched->getParam('controller');
-            $middleware = $routeToBeMatched->getParam('middleware');
-            $routeToBeMatchedRouteName = $routeToBeMatched->getMatchedRouteName();
 
-            if ($routeToBeMatchedRouteName !== $currentRouteMatchName
-                && (
-                    $this->manager->has($controller)
-                    ||
-                    $middleware !== false
+            && (
+                (
+                    ($routeToBeMatchedRouteName = $routeToBeMatched->getMatchedRouteName()) !== $currentRouteMatchName
+                        && (
+                            $this->manager->has($routeToBeMatched->getParam('controller'))
+                            ||
+                            $routeToBeMatched->getParam('middleware') !== false
+                        )
                 )
-            ) {
-                return parent::toUrl($url);
-            }
+                ||
+                (
+                    $routeToBeMatched->getParam('action') != $routeMatch->getParam('action')
+                )
+                ||
+                (
+                    $routeToBeMatchedRouteName === $currentRouteMatchName
+                )
+            )
 
-            $action = $routeToBeMatched->getParam('action');
-            $currentAction = $routeMatch->getParam('action');
-            if ($action !== $currentAction) {
-                return parent::toUrl($url);
-            }
-
-            if ($routeToBeMatchedRouteName === $currentRouteMatchName
-                && $uriTarget !== $current_uri
-            ) {
-                return parent::toUrl($url);
-            }
+        ) {
+            return parent::toUrl($url);
         }
 
         $default_url = (isset($this->config['default_url']))

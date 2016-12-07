@@ -438,8 +438,6 @@ class RedirectTest extends PHPUnit_Framework_TestCase
             $match = $this->prophesize(V2RouteMatch::class);
         }
 
-        $match->getParam('controller')->willReturn('bar')->shouldBeCalled();
-        $match->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $match->getParam('action')->willReturn('bar')->shouldBeCalled();
 
