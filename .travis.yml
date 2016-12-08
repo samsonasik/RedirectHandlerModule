@@ -11,7 +11,7 @@ before_install:
   - composer self-update
 
 install:
-  - composer install
+  - travis_retry composer install
 
 script:
   - ./vendor/bin/phpunit --coverage-text
