@@ -43,6 +43,33 @@ class RedirectFactoryTest extends PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
+            [
+                [
+                    'redirect_handler_module' => [
+                        'allow_not_routed_url' => true,
+                        'default_url' => '/',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'redirect_handler_module' => [
+                        'allow_not_routed_url' => false,
+                        'default_url' => '/',
+                        'options' => [
+                            'exclude_urls' => [
+                                'https://www.github.com/samsonasik/RedirectHandlerModule',
+                            ],
+                            'exclude_hosts' => [
+                                'www.github.com'
+                            ],
+                            'exclude_domains' => [
+                                'github.com',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

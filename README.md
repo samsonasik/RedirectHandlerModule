@@ -32,6 +32,9 @@ return [
             'exclude_hosts' => [
                 // 'www.github.com'
             ],
+            'exclude_domains' => [
+                // 'google.com',
+            ],
         ],
     ],
 ];
@@ -39,9 +42,9 @@ return [
 
 It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. It also disable redirect to self, so you can't redirect to self.
 
-For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls` or `exclude_hosts` options.
+For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls`/`exclude_hosts`/`exclude_domains` options.
 
-> if you define exclude_urls and/or exclude_hosts options, which one of them is your own current url, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls/exclude_hosts is not your own urls.
+> if you define exclude_urls/exclude_hosts/exclude_domains options, which one of them is your own current url/host/domain, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls/exclude_hosts/exclude_domains is not your current own.
 
 While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your `Module::onBootstrap($e)`:
 

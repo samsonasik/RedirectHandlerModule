@@ -19,6 +19,7 @@
 
 namespace RedirectHandlerModuleTest\Controller\Plugin;
 
+use InvalidArgumentException;
 use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
 use Zend\EventManager\EventManager;
@@ -112,6 +113,59 @@ class RedirectTest extends PHPUnit_Framework_TestCase
                 'options' => [
                     'exclude_hosts' => [
                         'www.github.com',
+                    ],
+                ],
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
+
+        $mvcEvent = $this->prophesize(MvcEvent::class);
+        $response = $this->prophesize(Response::class);
+        $mvcEvent->getResponse()->willReturn($response);
+        $this->controller->getEvent()->willReturn($mvcEvent);
+
+        $headers = $this->prophesize(Headers::class);
+        $headers->addHeaderLine('Location', $url);
+        $response->getHeaders()->willReturn($headers);
+        $response->setStatusCode(302)->shouldBeCalled();
+
+        $this->redirect->setController($this->controller->reveal());
+        $this->redirect->toUrl($url);
+    }
+
+    public function testExcludedDomainsWithInvalidDomain()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+
+        $this->redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+                'options' => [
+                    'exclude_domains' => [
+                        'github.com',
+                        'example.invalid',
+                    ],
+                ],
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
+        $this->redirect->toUrl($url);
+    }
+
+    public function testExcludedDomains()
+    {
+        $this->redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+                'options' => [
+                    'exclude_domains' => [
+                        'github.com',
                     ],
                 ],
             ],
