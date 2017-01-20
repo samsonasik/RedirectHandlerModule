@@ -55,7 +55,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
      *
      * @param string $url
      *
-     * @return Response
+     * @return \Zend\Http\PhpEnvironment\Response
      */
     public function toUrl($url)
     {
