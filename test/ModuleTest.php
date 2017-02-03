@@ -19,13 +19,17 @@
 
 namespace RedirectHandlerModuleTest;
 
-use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Module;
+use PHPUnit\Framework\TestCase;
+
+if (! class_exists(TestCase::class)) {
+    class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);
+}
 
 /**
  * This class tests Module class.
  */
-class ModuleTest extends PHPUnit_Framework_TestCase
+class ModuleTest extends TestCase
 {
     /**
      * @var Module

@@ -19,10 +19,14 @@
 
 namespace RedirectHandlerModuleTest\Controller\Plugin;
 
-use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\RedirectFactory;
+use PHPUnit\Framework\TestCase;
 
-class RedirectFactoryTest extends PHPUnit_Framework_TestCase
+if (! class_exists(TestCase::class)) {
+    class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);
+}
+
+class RedirectFactoryTest extends TestCase
 {
     private $factory;
 

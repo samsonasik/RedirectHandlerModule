@@ -20,7 +20,6 @@
 namespace RedirectHandlerModuleTest\Controller\Plugin;
 
 use InvalidArgumentException;
-use PHPUnit_Framework_TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
 use Zend\EventManager\EventManager;
 use Zend\Http\Headers;
@@ -33,8 +32,13 @@ use Zend\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
 use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\Http\TreeRouteStack as V3TreeRouteStack;
 use Zend\Router\RouteMatch as V3RouteMatch;
+use PHPUnit\Framework\TestCase;
 
-class RedirectTest extends PHPUnit_Framework_TestCase
+if (! class_exists(TestCase::class)) {
+    class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);
+}
+
+class RedirectTest extends TestCase
 {
     private $controllerManager;
     private $controller;
