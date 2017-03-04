@@ -113,6 +113,9 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
 
         if ($basePath !== '' && substr($url, 0, strlen($basePath)) !== $basePath) {
             $url         = $basePath . $url;
+        }
+
+        if ($basePath !== '' && substr($default_url, 0, strlen($basePath)) !== $basePath) {
             $default_url = $basePath . $default_url;
         }
 
