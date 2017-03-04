@@ -208,6 +208,7 @@ class RedirectTest extends TestCase
         $url = 'https://www.google.com/search';
 
         $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('')->shouldBeCalled();
         $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
         $request->setUri($url)->shouldBeCalled();
         $this->controller->getRequest()->willReturn($request);
@@ -370,6 +371,7 @@ class RedirectTest extends TestCase
         );
 
         $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('')->shouldBeCalled();
         $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
         $request->setUri($url)->shouldBeCalled();
         $this->controller->getRequest()->willReturn($request);
@@ -446,6 +448,7 @@ class RedirectTest extends TestCase
         );
 
         $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('')->shouldBeCalled();
         $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
         $request->setUri($url)->shouldBeCalled();
         $this->controller->getRequest()->willReturn($request);
@@ -478,6 +481,7 @@ class RedirectTest extends TestCase
         );
 
         $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('')->shouldBeCalled();
         $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
         $request->setUri($url)->shouldBeCalled();
         $this->controller->getRequest()->willReturn($request);
@@ -521,6 +525,7 @@ class RedirectTest extends TestCase
         $url = '/bar?succes=1';
 
         $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('')->shouldBeCalled();
         $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
         $request->setUri($url)->shouldBeCalled();
         $this->controller->getRequest()->willReturn($request);
@@ -550,6 +555,126 @@ class RedirectTest extends TestCase
 
         $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $match->getParam('action')->willReturn('bar')->shouldBeCalled();
+
+        $router->match($request)->willReturn($match);
+        $mvcEvent->getRouter()->willReturn($router);
+
+        $response = $this->prophesize(Response::class);
+        $mvcEvent->getResponse()->willReturn($response);
+
+        $headers = $this->prophesize(Headers::class);
+        $headers->addHeaderLine('Location', $url);
+        $response->getHeaders()->willReturn($headers);
+        $response->setStatusCode(302)->shouldBeCalled();
+
+        $this->controller->getEvent()->willReturn($mvcEvent);
+        $redirect->setController($this->controller->reveal());
+        $redirect->toUrl($url);
+    }
+
+    public function testNonEmptyBasePathAndUrlContainsBasePathShouldRedirectNotApplyBaseUrlIntoUrlPrefix()
+    {
+        $redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = '/app/public/bar';
+
+        $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('/app/public')->shouldBeCalled();
+        $request->getRequestUri()->willReturn('/app/public/foo')->shouldBeCalled();
+        $request->setUri($url)->shouldBeCalled();
+        $this->controller->getRequest()->willReturn($request);
+
+        $mvcEvent = $this->prophesize(MvcEvent::class);
+        if (class_exists(V3RouteMatch::class)) {
+            $routeMatch = $this->prophesize(V3RouteMatch::class);
+        } else {
+            $routeMatch = $this->prophesize(V2RouteMatch::class);
+        }
+        $routeMatch->getMatchedRouteName()->willReturn('foo')->shouldBeCalled();
+        $mvcEvent->getRouteMatch()->willReturn($routeMatch);
+
+        if (class_exists(V3TreeRouteStack::class)) {
+            $router = $this->prophesize(V3TreeRouteStack::class);
+        } else {
+            $router = $this->prophesize(V2TreeRouteStack::class);
+        }
+        $router->getRequestUri()->willReturn('http://localhost/app/public/bar');
+
+        if (class_exists(V3RouteMatch::class)) {
+            $match = $this->prophesize(V3RouteMatch::class);
+        } else {
+            $match = $this->prophesize(V2RouteMatch::class);
+        }
+
+        $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        $match->getParam('controller')->willReturn('bar')->shouldBeCalled();
+        $this->controllerManager->has('bar')->willReturn(true);
+
+        $router->match($request)->willReturn($match);
+        $mvcEvent->getRouter()->willReturn($router);
+
+        $response = $this->prophesize(Response::class);
+        $mvcEvent->getResponse()->willReturn($response);
+
+        $headers = $this->prophesize(Headers::class);
+        $headers->addHeaderLine('Location', $url);
+        $response->getHeaders()->willReturn($headers);
+        $response->setStatusCode(302)->shouldBeCalled();
+
+        $this->controller->getEvent()->willReturn($mvcEvent);
+        $redirect->setController($this->controller->reveal());
+        $redirect->toUrl($url);
+    }
+
+    public function testNonEmptyBasePathAndUrlNotContainsBasePathShouldRedirectWithApplyBaseUrlIntoUrlPrefix()
+    {
+        $redirect = new Redirect(
+            [
+                'allow_not_routed_url' => false,
+                'default_url' => '/',
+            ],
+            $this->controllerManager->reveal()
+        );
+
+        $url = '/bar';
+
+        $request = $this->prophesize(Request::class);
+        $request->getBasePath()->willReturn('/app/public')->shouldBeCalled();
+        $request->getRequestUri()->willReturn('/app/public/foo')->shouldBeCalled();
+        $request->setUri('/app/public' . $url)->shouldBeCalled();
+        $this->controller->getRequest()->willReturn($request);
+
+        $mvcEvent = $this->prophesize(MvcEvent::class);
+        if (class_exists(V3RouteMatch::class)) {
+            $routeMatch = $this->prophesize(V3RouteMatch::class);
+        } else {
+            $routeMatch = $this->prophesize(V2RouteMatch::class);
+        }
+        $routeMatch->getMatchedRouteName()->willReturn('foo')->shouldBeCalled();
+        $mvcEvent->getRouteMatch()->willReturn($routeMatch);
+
+        if (class_exists(V3TreeRouteStack::class)) {
+            $router = $this->prophesize(V3TreeRouteStack::class);
+        } else {
+            $router = $this->prophesize(V2TreeRouteStack::class);
+        }
+        $router->getRequestUri()->willReturn('http://localhost/app/public/bar');
+
+        if (class_exists(V3RouteMatch::class)) {
+            $match = $this->prophesize(V3RouteMatch::class);
+        } else {
+            $match = $this->prophesize(V2RouteMatch::class);
+        }
+
+        $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        $match->getParam('controller')->willReturn('bar')->shouldBeCalled();
+        $this->controllerManager->has('bar')->willReturn(true);
 
         $router->match($request)->willReturn($match);
         $mvcEvent->getRouter()->willReturn($router);

@@ -105,6 +105,17 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $controller = $this->getController();
 
         $request = $controller->getRequest();
+        $basePath = $request->getBasePath();
+
+        $default_url = (isset($this->config['default_url']))
+            ? $this->config['default_url']
+            : '/';
+
+        if ($basePath !== '' && substr($url, 0, strlen($basePath)) !== $basePath) {
+            $url         = $basePath . $url;
+            $default_url = $basePath . $default_url;
+        }
+
         $current_uri = $request->getRequestUri();
         $request->setUri($url);
 
@@ -151,10 +162,6 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         ) {
             return parent::toUrl($url);
         }
-
-        $default_url = (isset($this->config['default_url']))
-            ? $this->config['default_url']
-            : '/';
 
         return parent::toUrl($default_url);
     }
