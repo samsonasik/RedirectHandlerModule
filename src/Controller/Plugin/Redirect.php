@@ -111,12 +111,13 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             ? $this->config['default_url']
             : '/';
 
-        if ($basePath !== '' && substr($url, 0, strlen($basePath)) !== $basePath) {
-            $url         = $basePath . $url;
-        }
-
-        if ($basePath !== '' && substr($default_url, 0, strlen($basePath)) !== $basePath) {
-            $default_url = $basePath . $default_url;
+        if ($basePath !== '') {
+            if (substr($url, 0, strlen($basePath)) !== $basePath) {
+                $url = $basePath . $url;
+            }
+            if (substr($default_url, 0, strlen($basePath)) !== $basePath) {
+                $default_url  = $basePath . $default_url;
+            }
         }
 
         $current_uri = $request->getRequestUri();
