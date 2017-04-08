@@ -34,10 +34,6 @@ use Zend\Router\Http\TreeRouteStack as V3TreeRouteStack;
 use Zend\Router\RouteMatch as V3RouteMatch;
 use PHPUnit\Framework\TestCase;
 
-if (! class_exists(TestCase::class)) {
-    class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);
-}
-
 class RedirectTest extends TestCase
 {
     private $controllerManager;

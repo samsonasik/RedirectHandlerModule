@@ -22,10 +22,6 @@ namespace RedirectHandlerModuleTest\Controller\Plugin;
 use RedirectHandlerModule\Controller\Plugin\RedirectFactory;
 use PHPUnit\Framework\TestCase;
 
-if (! class_exists(TestCase::class)) {
-    class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);
-}
-
 class RedirectFactoryTest extends TestCase
 {
     private $factory;
