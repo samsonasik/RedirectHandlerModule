@@ -275,6 +275,16 @@ class RedirectTest extends TestCase
         $routeMatch3->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $routeMatch3->getParam('action')->willReturn('bar')->shouldBeCalled();
 
+        if (class_exists(V3RouteMatch::class)) {
+            $routeMatch4 = $this->prophesize(V3RouteMatch::class);
+        } else {
+            $routeMatch4 = $this->prophesize(V2RouteMatch::class);
+        }
+        $routeMatch4->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
+        $routeMatch4->getParam('middleware')->willReturn('bar')->shouldBeCalled();
+        $routeMatch4->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
+        $routeMatch4->getParam('action')->willReturn('bar')->shouldBeCalled();
+
         return [
             [
                 'isnull',
@@ -349,6 +359,14 @@ class RedirectTest extends TestCase
             [
                 'bar',
                 $routeMatch3,
+                [
+                    'allow_not_routed_url' => false,
+                ]
+            ],
+
+            [
+                'bar',
+                $routeMatch4,
                 [
                     'allow_not_routed_url' => false,
                 ]
