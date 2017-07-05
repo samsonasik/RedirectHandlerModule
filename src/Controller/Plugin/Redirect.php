@@ -81,7 +81,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             }
 
             if (! $parser->isSuffixValid($domain)) {
-                throw new InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(\sprintf(
                     '%s is not a valid domain',
                     $domain
                 ));
@@ -95,8 +95,8 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
 
         $uriTargetHost  = (new Uri($url))->getHost();
         if (true === $allow_not_routed_url ||
-            in_array($url, $exclude_urls) ||
-            in_array($uriTargetHost, $exclude_hosts) ||
+            \in_array($url, $exclude_urls) ||
+            \in_array($uriTargetHost, $exclude_hosts) ||
             $redirectOfDomain
         ) {
             return parent::toUrl($url);
@@ -112,10 +112,10 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
             : '/';
 
         if ($basePath !== '') {
-            if (substr($url, 0, strlen($basePath)) !== $basePath) {
+            if (\substr($url, 0, \strlen($basePath)) !== $basePath) {
                 $url = $basePath . $url;
             }
-            if (substr($default_url, 0, strlen($basePath)) !== $basePath) {
+            if (\substr($default_url, 0, \strlen($basePath)) !== $basePath) {
                 $default_url  = $basePath . $default_url;
             }
         }
