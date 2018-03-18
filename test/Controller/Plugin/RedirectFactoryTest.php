@@ -19,9 +19,9 @@
 
 namespace RedirectHandlerModuleTest\Controller\Plugin;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use RedirectHandlerModule\Controller\Plugin\RedirectFactory;
-use PHPUnit\Framework\TestCase;
 
 class RedirectFactoryTest extends TestCase
 {

@@ -19,8 +19,8 @@
 
 namespace RedirectHandlerModuleTest;
 
-use RedirectHandlerModule\Module;
 use PHPUnit\Framework\TestCase;
+use RedirectHandlerModule\Module;
 
 if (! class_exists(TestCase::class)) {
     class_alias(\PHPUnit_Framework_TestCase::class, TestCase::class);

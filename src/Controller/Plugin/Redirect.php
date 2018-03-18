@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use InvalidArgumentException;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Mvc\Controller\ControllerManager;
