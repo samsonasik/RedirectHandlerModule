@@ -19,6 +19,7 @@
 
 namespace RedirectHandlerModuleTest\Controller\Plugin;
 
+use Psr\Container\ContainerInterface;
 use RedirectHandlerModule\Controller\Plugin\RedirectFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -75,7 +76,7 @@ class RedirectFactoryTest extends TestCase
      */
     public function testInvoke($config)
     {
-        $services = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $services = $this->prophesize(ContainerInterface::class);
 
         $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
         $services->get('ControllerManager')->willReturn($controllerManager)
@@ -85,19 +86,5 @@ class RedirectFactoryTest extends TestCase
                                 ->shouldBeCalled();
 
         $this->factory->__invoke($services->reveal());
-    }
-
-    public function testInvokeWithServiceLocatorAwareInterfaceInstance()
-    {
-        $config = [];
-        $services = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
-        $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
-        $controllerManager->getServiceLocator()->willReturn($services)
-                                               ->shouldBeCalled();
-
-        $services->get('config')->willReturn($config)
-                               ->shouldBeCalled();
-
-        $this->factory->__invoke($controllerManager->reveal());
     }
 }

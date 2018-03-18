@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,19 +21,14 @@
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\Mvc\Controller\ControllerManager;
+use Psr\Container\ContainerInterface;
 
 class RedirectFactory
 {
-    public function __invoke($manager)
+    public function __invoke(ContainerInterface $container) : Redirect
     {
-        if ($manager instanceof ControllerManager) {
-            $services = $manager->getServiceLocator();
-            $controllerManager = $manager;
-        } else {
-            $services = $manager;
-            $controllerManager = $services->get('ControllerManager');
-        }
+        $services          = $container;
+        $controllerManager = $services->get('ControllerManager');
 
         $config = $services->get('config');
 
