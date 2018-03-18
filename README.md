@@ -9,6 +9,10 @@ RedirectHandlerModule
 
 *RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your zf2/zf3 application. It simply override existing ZF2/ZF3 redirect plugin, so we can just use it.
 
+> This is README for version ^2.0 which only support ZF3 with php ^7.1.
+
+> For version 1, you can read at [version 1 readme](https://github.com/samsonasik/RedirectHandlerModule/tree/1.x.x) which still support ZF2 with php ^5.6|^7.0 support.
+
 For example, we use `redirect()` plugin in your controller:
 
 ```php
@@ -32,9 +36,6 @@ return [
             'exclude_hosts' => [
                 // 'www.github.com'
             ],
-            'exclude_domains' => [
-                // 'google.com',
-            ],
         ],
     ],
 ];
@@ -42,9 +43,9 @@ return [
 
 It means, we can't allow to make redirect to outside registered routes, whenever found un-registered url in routes, then we will be redirected to default_url. It also disable redirect to self, so you can't redirect to self.
 
-For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls`/`exclude_hosts`/`exclude_domains` options.
+For specific urls that exceptional ( allowed to be redirected even not registered in routes), you can register at `exclude_urls`/`exclude_hosts` options.
 
-> if you define exclude_urls/exclude_hosts/exclude_domains options, which one of them is your own current url/host/domain, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls/exclude_hosts/exclude_domains is not your current own.
+> if you define exclude_urls/exclude_hosts options, which one of them is your own current url/host/domain, its your risk to still get "infinite" redirection loops. so, make sure exclude_urls/exclude_hosts is not your current own.
 
 While default implementation of redirect to self will silently, you can trigger your listener to handle redirect to self in your `Module::onBootstrap($e)`:
 

@@ -63,9 +63,6 @@ class RedirectFactoryTest extends TestCase
                             'exclude_hosts' => [
                                 'www.github.com'
                             ],
-                            'exclude_domains' => [
-                                'github.com',
-                            ],
                         ],
                     ],
                 ],

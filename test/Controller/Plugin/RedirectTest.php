@@ -28,10 +28,8 @@ use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
-use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
-use Zend\Router\Http\TreeRouteStack as V3TreeRouteStack;
-use Zend\Router\RouteMatch as V3RouteMatch;
+use Zend\Router\Http\TreeRouteStack;
+use Zend\Router\RouteMatch;
 use PHPUnit\Framework\TestCase;
 
 class RedirectTest extends TestCase
@@ -133,143 +131,21 @@ class RedirectTest extends TestCase
         $redirect->toUrl($url);
     }
 
-    public function testExcludedDomainsWithInvalidDomain()
-    {
-        $this->setExpectedException(InvalidArgumentException::class);
-
-        $redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-                'options' => [
-                    'exclude_domains' => [
-                        'github.com',
-                        'example.invalid',
-                    ],
-                ],
-            ],
-            $this->controllerManager->reveal()
-        );
-
-        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
-        $redirect->toUrl($url);
-    }
-
-    public function testExcludedDomains()
-    {
-        $redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-                'options' => [
-                    'exclude_domains' => [
-                        'github.com',
-                    ],
-                ],
-            ],
-            $this->controllerManager->reveal()
-        );
-
-        $url = 'https://www.github.com/samsonasik/RedirectHandlerModule';
-
-        $mvcEvent = $this->prophesize(MvcEvent::class);
-        $response = $this->prophesize(Response::class);
-        $mvcEvent->getResponse()->willReturn($response);
-        $this->controller->getEvent()->willReturn($mvcEvent);
-
-        $headers = $this->prophesize(Headers::class);
-        $headers->addHeaderLine('Location', $url);
-        $response->getHeaders()->willReturn($headers);
-        $response->setStatusCode(302)->shouldBeCalled();
-
-        $redirect->setController($this->controller->reveal());
-        $redirect->toUrl($url);
-    }
-
-    public function testExcludedDomainsButDifferentDomainInUrl()
-    {
-        $redirect = new Redirect(
-            [
-                'allow_not_routed_url' => false,
-                'default_url' => '/',
-                'options' => [
-                    'exclude_domains' => [
-                        'github.com',
-                    ],
-                ],
-            ],
-            $this->controllerManager->reveal()
-        );
-
-        $url = 'https://www.google.com/search';
-
-        $request = $this->prophesize(Request::class);
-        $request->getBasePath()->willReturn('')->shouldBeCalled();
-        $request->getRequestUri()->willReturn('/bar')->shouldBeCalled();
-        $request->setUri($url)->shouldBeCalled();
-        $this->controller->getRequest()->willReturn($request);
-
-        $mvcEvent = $this->prophesize(MvcEvent::class);
-
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
-
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
-        } else {
-            $router = $this->prophesize(V2TreeRouteStack::class);
-        }
-
-        $mvcEvent->getRouteMatch()->willReturn($routeMatch);
-        $mvcEvent->getRouter()->willReturn($router);
-
-        $router->getRequestUri()->willReturn('http://localhost/bar');
-        $router->match($request)->willReturn(null);
-
-        $response = $this->prophesize(Response::class);
-        $mvcEvent->getResponse()->willReturn($response);
-
-        $headers = $this->prophesize(Headers::class);
-        $headers->addHeaderLine('Location', '/');
-        $response->getHeaders()->willReturn($headers);
-        $response->setStatusCode(302)->shouldBeCalled();
-
-        $this->controller->getEvent()->willReturn($mvcEvent);
-        $redirect->setController($this->controller->reveal());
-
-        $redirect->toUrl($url);
-    }
-
     public function provideMatches()
     {
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch1 = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch1 = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch1 = $this->prophesize(RouteMatch::class);
 
         $routeMatch1->getParam('controller')->willReturn('not-bar')->shouldBeCalled();
         $routeMatch1->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $routeMatch1->getMatchedRouteName()->willReturn('not-bar')->shouldBeCalled();
 
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch2 = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch2 = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch2 = $this->prophesize(RouteMatch::class);
         $routeMatch2->getParam('controller')->willReturn('bar')->shouldBeCalled();
         $routeMatch2->getParam('middleware')->willReturn(false)->shouldBeCalled();
         $routeMatch2->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $routeMatch2->getParam('action')->willReturn('bar')->shouldBeCalled();
 
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch3 = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch3 = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch3 = $this->prophesize(RouteMatch::class);
         $routeMatch3->getParam('controller')->willReturn('not-registered')->shouldBeCalled();
         $routeMatch3->getParam('middleware')->willReturn('bar')->shouldBeCalled();
         $routeMatch3->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
@@ -373,19 +249,16 @@ class RedirectTest extends TestCase
         $this->controller->getRequest()->willReturn($request);
 
         $mvcEvent = $this->prophesize(MvcEvent::class);
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch = $this->prophesize(RouteMatch::class);
+
         $routeMatch->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         if ($status === 'bar' && $url !== 'http://www.google.com') {
             $routeMatch->getParam('action')->willReturn('foo')->shouldBeCalled();
         }
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
+        if (class_exists(TreeRouteStack::class)) {
+            $router = $this->prophesize(TreeRouteStack::class);
         } else {
             $router = $this->prophesize(V2TreeRouteStack::class);
         }
@@ -483,17 +356,12 @@ class RedirectTest extends TestCase
         $this->controller->getRequest()->willReturn($request);
 
         $mvcEvent = $this->prophesize(MvcEvent::class);
-
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch = $this->prophesize(RouteMatch::class);
 
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
+        if (class_exists(TreeRouteStack::class)) {
+            $router = $this->prophesize(TreeRouteStack::class);
         } else {
             $router = $this->prophesize(V2TreeRouteStack::class);
         }
@@ -527,27 +395,19 @@ class RedirectTest extends TestCase
         $this->controller->getRequest()->willReturn($request);
 
         $mvcEvent = $this->prophesize(MvcEvent::class);
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch = $this->prophesize(RouteMatch::class);
+
         $routeMatch->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $routeMatch->getParam('action')->willReturn('bar')->shouldBeCalled();
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
+        if (class_exists(TreeRouteStack::class)) {
+            $router = $this->prophesize(TreeRouteStack::class);
         } else {
             $router = $this->prophesize(V2TreeRouteStack::class);
         }
         $router->getRequestUri()->willReturn('http://localhost/bar');
-
-        if (class_exists(V3RouteMatch::class)) {
-            $match = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $match = $this->prophesize(V2RouteMatch::class);
-        }
+        $match = $this->prophesize(RouteMatch::class);
 
         $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $match->getParam('action')->willReturn('bar')->shouldBeCalled();
@@ -587,27 +447,19 @@ class RedirectTest extends TestCase
         $this->controller->getRequest()->willReturn($request);
 
         $mvcEvent = $this->prophesize(MvcEvent::class);
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch = $this->prophesize(RouteMatch::class);
+
         $routeMatch->getMatchedRouteName()->willReturn('foo')->shouldBeCalled();
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
+        if (class_exists(TreeRouteStack::class)) {
+            $router = $this->prophesize(TreeRouteStack::class);
         } else {
             $router = $this->prophesize(V2TreeRouteStack::class);
         }
         $router->getRequestUri()->willReturn('http://localhost/app/public/bar');
 
-        if (class_exists(V3RouteMatch::class)) {
-            $match = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $match = $this->prophesize(V2RouteMatch::class);
-        }
-
+        $match = $this->prophesize(RouteMatch::class);
         $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $match->getParam('controller')->willReturn('bar')->shouldBeCalled();
         $this->controllerManager->has('bar')->willReturn(true);
@@ -647,26 +499,14 @@ class RedirectTest extends TestCase
         $this->controller->getRequest()->willReturn($request);
 
         $mvcEvent = $this->prophesize(MvcEvent::class);
-        if (class_exists(V3RouteMatch::class)) {
-            $routeMatch = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $routeMatch = $this->prophesize(V2RouteMatch::class);
-        }
+        $routeMatch = $this->prophesize(RouteMatch::class);
         $routeMatch->getMatchedRouteName()->willReturn('foo')->shouldBeCalled();
         $mvcEvent->getRouteMatch()->willReturn($routeMatch);
 
-        if (class_exists(V3TreeRouteStack::class)) {
-            $router = $this->prophesize(V3TreeRouteStack::class);
-        } else {
-            $router = $this->prophesize(V2TreeRouteStack::class);
-        }
+        $router = $this->prophesize(TreeRouteStack::class);
         $router->getRequestUri()->willReturn('http://localhost/app/public/bar');
 
-        if (class_exists(V3RouteMatch::class)) {
-            $match = $this->prophesize(V3RouteMatch::class);
-        } else {
-            $match = $this->prophesize(V2RouteMatch::class);
-        }
+        $match = $this->prophesize(RouteMatch::class);
 
         $match->getMatchedRouteName()->willReturn('bar')->shouldBeCalled();
         $match->getParam('controller')->willReturn('bar')->shouldBeCalled();

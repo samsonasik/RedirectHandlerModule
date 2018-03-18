@@ -20,8 +20,6 @@
 namespace RedirectHandlerModule\Controller\Plugin;
 
 use InvalidArgumentException;
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Mvc\Controller\ControllerManager;
@@ -68,36 +66,11 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $exclude_hosts = (isset($this->config['options']['exclude_hosts']))
             ? $this->config['options']['exclude_hosts']
             : [];
-        $exclude_domains = (isset($this->config['options']['exclude_domains']))
-            ? $this->config['options']['exclude_domains']
-            : [];
-
-        $redirectOfDomain = false;
-        foreach ($exclude_domains as $key => $domain) {
-
-            if ($key === 0) {
-                $pslManager = new PublicSuffixListManager();
-                $parser     = new Parser($pslManager->getList());
-            }
-
-            if (! $parser->isSuffixValid($domain)) {
-                throw new InvalidArgumentException(\sprintf(
-                    '%s is not a valid domain',
-                    $domain
-                ));
-            }
-
-            if ($parser->parseUrl($url)->host->registerableDomain === $domain) {
-                $redirectOfDomain = true;
-            }
-
-        }
 
         $uriTargetHost  = (new Uri($url))->getHost();
         if (true === $allow_not_routed_url ||
             \in_array($url, $exclude_urls) ||
-            \in_array($uriTargetHost, $exclude_hosts) ||
-            $redirectOfDomain
+            \in_array($uriTargetHost, $exclude_hosts)
         ) {
             return parent::toUrl($url);
         }

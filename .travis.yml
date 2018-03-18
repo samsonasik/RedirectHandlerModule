@@ -2,18 +2,6 @@ language: php
 
 matrix:
   include:
-    - php: 5.6
-      env:
-        - DEPS=lowest
-    - php: 5.6
-      env:
-        - DEPS=latest
-    - php: 7.0
-      env:
-        - DEPS=lowest
-    - php: 7.0
-      env:
-        - DEPS=latest
     - php: 7.1
       env:
         - DEPS=lowest
@@ -37,7 +25,7 @@ script:
   - ./vendor/bin/phpunit --coverage-text
 
 after_script:
-  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then php ./vendor/bin/coveralls -v --exclude-no-stmt; fi
+  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then php ./vendor/bin/php-coveralls -v --exclude-no-stmt; fi
 
 notifications:
   email: false

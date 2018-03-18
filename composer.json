@@ -14,15 +14,14 @@
         }
     ],
     "require": {
-        "php": "^5.6|^7.0",
-        "jeremykendall/php-domain-parser": "^3.0",
-        "zendframework/zend-mvc": "~2.4 || ^3.0.1"
+        "php": "^7.1",
+        "zendframework/zend-mvc": "^3.0",
+        "zendframework/zend-servicemanager": "^3.3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.7|~6.0",
-        "satooshi/php-coveralls": "^1.0.1",
-        "phpunit/phpcov": "~2.0|~3.0",
-        "zendframework/zend-http": "~2.4"
+        "phpunit/phpunit": "^5.0",
+        "satooshi/php-coveralls": "^2.0",
+        "phpunit/phpcov": "^3.0"
     },
     "autoload": {
         "psr-4": {
