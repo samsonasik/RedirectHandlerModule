@@ -58,15 +58,9 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
      */
     public function toUrl($url)
     {
-        $allow_not_routed_url = (isset($this->config['allow_not_routed_url']))
-            ? $this->config['allow_not_routed_url']
-            : false;
-        $exclude_urls = (isset($this->config['options']['exclude_urls']))
-            ? $this->config['options']['exclude_urls']
-            : [];
-        $exclude_hosts = (isset($this->config['options']['exclude_hosts']))
-            ? $this->config['options']['exclude_hosts']
-            : [];
+        $allow_not_routed_url = $this->config['allow_not_routed_url'] ?? false;
+        $exclude_urls         = $this->config['options']['exclude_urls'] ?? [];
+        $exclude_hosts        = $this->config['options']['exclude_hosts'] ?? [];
 
         $uriTargetHost  = (new Uri($url))->getHost();
         if (true === $allow_not_routed_url ||
@@ -81,9 +75,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $request = $controller->getRequest();
         $basePath = $request->getBasePath();
 
-        $default_url = (isset($this->config['default_url']))
-            ? $this->config['default_url']
-            : '/';
+        $default_url = $this->config['default_url'] ?? '/';
 
         if ($basePath !== '') {
             if (\substr($url, 0, \strlen($basePath)) !== $basePath) {
