@@ -27,10 +27,8 @@ class RedirectFactory
 {
     public function __invoke(ContainerInterface $container) : Redirect
     {
-        $services          = $container;
-        $controllerManager = $services->get('ControllerManager');
-
-        $config = $services->get('config');
+        $controllerManager = $container->get('ControllerManager');
+        $config            = $container->get('config');
 
         $config['redirect_handler_module'] = $config['redirect_handler_module'] ?? [
             'allow_not_routed_url' => false,
