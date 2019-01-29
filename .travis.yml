@@ -28,7 +28,7 @@ before_script:
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer install --prefer-source --no-interaction ; fi
 
 script:
-  - composer cs-check
+  - if [[ $DEPS == 'latest' ]]; then composer cs-check ; fi
   - mkdir -p ./build/logs
   - ./vendor/bin/phpunit --coverage-text
 
