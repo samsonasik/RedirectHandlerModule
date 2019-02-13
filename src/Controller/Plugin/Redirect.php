@@ -78,10 +78,11 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
         $default_url = $this->config['default_url'] ?? '/';
 
         if ($basePath !== '') {
-            if (\substr($url, 0, \strlen($basePath)) !== $basePath) {
+            if (\strpos($url, $basePath) !== 0) {
                 $url = $basePath . $url;
             }
-            if (\substr($default_url, 0, \strlen($basePath)) !== $basePath) {
+
+            if (\strpos($default_url, $basePath) !== 0) {
                 $default_url  = $basePath . $default_url;
             }
         }
