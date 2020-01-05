@@ -21,11 +21,11 @@ declare(strict_types=1);
 
 namespace RedirectHandlerModule\Controller\Plugin;
 
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Mvc\Controller\ControllerManager;
-use Zend\Mvc\Controller\Plugin\Redirect as BaseRedirect;
-use Zend\Uri\Uri;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\Controller\Plugin\Redirect as BaseRedirect;
+use Laminas\Uri\Uri;
 
 class Redirect extends BaseRedirect implements EventManagerAwareInterface
 {
@@ -54,7 +54,7 @@ class Redirect extends BaseRedirect implements EventManagerAwareInterface
      *
      * @param string $url
      *
-     * @return \Zend\Http\PhpEnvironment\Response
+     * @return \Laminas\Http\PhpEnvironment\Response
      */
     public function toUrl($url)
     {

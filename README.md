@@ -7,9 +7,11 @@ RedirectHandlerModule
 [![Coverage Status](https://coveralls.io/repos/samsonasik/RedirectHandlerModule/badge.svg?branch=master)](https://coveralls.io/r/samsonasik/RedirectHandlerModule)
 [![Downloads](https://poser.pugx.org/samsonasik/redirect-handler-module/downloads)](https://packagist.org/packages/samsonasik/redirect-handler-module)
 
-*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your ZF application. It simply override existing ZF redirect plugin, so we can just use it.
+*RedirectHandlerModule* is a module for handling redirect when the given url to redirect plugin is not registered in your Laminas application. It simply override existing Laminas redirect plugin, so we can just use it.
 
-> This is README for version ^2.0 which only support ZF3 with php ^7.1.
+> This is README for version ^3.0 which only support Laminas 3 with php ^7.1.
+
+> For version 2, you can read at [version 2 readme](https://github.com/samsonasik/RedirectHandlerModule/tree/2.x.x) which still support ZF3 with php ^7.1 support.
 
 > For version 1, you can read at [version 1 readme](https://github.com/samsonasik/RedirectHandlerModule/tree/1.x.x) which still support ZF2 with php ^5.6|^7.0 support.
 
