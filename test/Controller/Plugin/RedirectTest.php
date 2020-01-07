@@ -21,15 +21,15 @@ namespace RedirectHandlerModuleTest\Controller\Plugin;
 
 use PHPUnit\Framework\TestCase;
 use RedirectHandlerModule\Controller\Plugin\Redirect;
-use Zend\EventManager\EventManager;
-use Zend\Http\Headers;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Controller\ControllerManager;
-use Zend\Mvc\MvcEvent;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Router\RouteMatch;
+use Laminas\EventManager\EventManager;
+use Laminas\Http\Headers;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Router\RouteMatch;
 
 class RedirectTest extends TestCase
 {

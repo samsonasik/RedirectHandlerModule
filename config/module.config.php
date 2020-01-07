@@ -20,10 +20,10 @@
 return [
     'controller_plugins' => [
         'factories' => [
-            'redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
-            'Redirect'                                   => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
-            \Zend\Mvc\Controller\Plugin\Redirect::class  => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
-            'zendmvccontrollerpluginredirect'            => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'redirect'                                      => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'Redirect'                                      => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            \Laminas\Mvc\Controller\Plugin\Redirect::class  => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
+            'laminasmvccontrollerpluginredirect'            => 'RedirectHandlerModule\Controller\Plugin\RedirectFactory',
         ],
     ],
 ];

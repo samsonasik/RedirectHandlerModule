@@ -78,7 +78,7 @@ class RedirectFactoryTest extends TestCase
     {
         $services = $this->prophesize(ContainerInterface::class);
 
-        $controllerManager = $this->prophesize('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager = $this->prophesize('Laminas\Mvc\Controller\ControllerManager');
         $services->get('ControllerManager')->willReturn($controllerManager)
                                            ->shouldBeCalled();
 
